@@ -1,5 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <div>
+  <div v-if="project != null">
 
     <v-toolbar flat>
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
@@ -29,7 +29,7 @@
       </v-tab>
     </v-tabs>
 
-    <div class="pa-4" v-if="false">
+    <div class="pa-4" v-if="project.plan === 'free'">
       <v-alert
         dense
         text
@@ -116,6 +116,7 @@
 </style>
 <script>
 import EventBus from '@/event-bus';
+import axios from 'axios';
 
 const PLATFORM_ICONS = {
   windows: {
@@ -166,6 +167,7 @@ export default {
     return {
       PLATFORM_ICONS,
       EXTENSION_ICONS,
+      project: null,
       deleteProjectDialog: null,
       versions: [{
         semver: '2.9.63',
@@ -215,6 +217,16 @@ export default {
     };
   },
 
+  watch: {
+    projectId() {
+      this.refreshProject();
+    },
+  },
+
+  async created() {
+    await this.refreshProject();
+  },
+
   methods: {
     getAssetUrl(asset, version) {
       return `https://www.semui.co/uploads/v${version.semver}-premium/${version.id}/semaphore_${version.semver}-premium_${asset.platform}_${asset.architecture}.${asset.extension}`;
@@ -229,6 +241,13 @@ export default {
         color: 'error',
         text: e.message,
       });
+    },
+    async refreshProject() {
+      this.project = (await axios({
+        method: 'get',
+        url: `/billing/projects/${this.projectId}`,
+        responseType: 'json',
+      })).data;
     },
 
   },
