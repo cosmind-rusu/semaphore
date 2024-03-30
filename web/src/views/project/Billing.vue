@@ -172,14 +172,14 @@
               <span v-else>{{ project.planFinishDate | formatDate2 }}</span>
             </v-timeline-item>
 
-            <v-timeline-item
-              v-if="projectType === 'premium'"
-              fill-dot
-              icon="mdi-server"
-              class="text-subtitle-1 align-center"
-            >
-              Servers: {{ project.servers || 0 }} / {{ plan.servers || '&mdash;' }} used
-            </v-timeline-item>
+<!--            <v-timeline-item-->
+<!--              v-if="projectType === 'premium'"-->
+<!--              fill-dot-->
+<!--              icon="mdi-server"-->
+<!--              class="text-subtitle-1 align-center"-->
+<!--            >-->
+<!--              Servers: {{ project.servers || 0 }} / {{ plan.servers || '&mdash;' }} used-->
+<!--            </v-timeline-item>-->
 
             <v-timeline-item
               v-if="projectType === 'premium'"
@@ -227,7 +227,7 @@
           >
             <v-card-title class="text-h3">
               Free
-              <v-spacer />
+              <v-spacer/>
               <v-chip
                 class="ml-4 mt-1 text-subtitle-1 py-3 px-4 font-weight-bold"
                 v-if="project.plan === 'free'"
@@ -273,9 +273,9 @@
             flat
           >
             <v-card-title class="text-h3">
-              $5
+              $7
 
-              <v-spacer />
+              <v-spacer/>
               <v-chip
                 class="ml-4 mt-1 font-weight-bold text-center pa-4 text-subtitle-1"
                 color="success"
@@ -365,21 +365,21 @@
                 dense
                 style="margin-left: -30px;"
               >
-                <v-timeline-item
-                  icon="mdi-server"
-                  fill-dot
-                  class="text-subtitle-1 align-center"
-                >
-                  {{ plan.servers }} instance(s)
-                </v-timeline-item>
+<!--                <v-timeline-item-->
+<!--                  icon="mdi-server"-->
+<!--                  fill-dot-->
+<!--                  class="text-subtitle-1 align-center"-->
+<!--                >-->
+<!--                  {{ plan.servers }} instance(s)-->
+<!--                </v-timeline-item>-->
 
-                <v-timeline-item
-                  fill-dot
-                  icon="mdi-cog"
-                  class="text-subtitle-1 align-center"
-                >
-                  <div>{{ plan.runners }} runners</div>
-                </v-timeline-item>
+<!--                <v-timeline-item-->
+<!--                  fill-dot-->
+<!--                  icon="mdi-cog"-->
+<!--                  class="text-subtitle-1 align-center"-->
+<!--                >-->
+<!--                  <div>{{ plan.runners }} runners</div>-->
+<!--                </v-timeline-item>-->
 
                 <v-timeline-item
                   fill-dot
@@ -428,28 +428,35 @@ const PLANS = {
     runnerUsage: 50 * 60,
   },
   starter: {
-    price: 5,
+    price: 7,
     diskUsage: 1000,
     runnerUsage: 1000 * 60,
   },
+  pro: {
+    price: 25,
+    diskUsage: 3000,
+    runnerUsage: 3000 * 60,
+  },
   premium: {
     price: 12,
+    users: 4,
+
     servers: 1,
     runners: 5,
-    users: 3,
   },
   premium_plus: {
-    price: 50,
+    price: 40,
+    users: 8,
+
     servers: 3,
     runners: 20,
-    users: 15,
   },
-  enterprise: {
-    price: 250,
-    servers: 10,
-    runners: 100,
-    users: 70,
-  },
+  // enterprise: {
+  //   price: 250,
+  //   servers: 10,
+  //   runners: 100,
+  //   users: 70,
+  // },
 };
 
 export default {
@@ -468,7 +475,7 @@ export default {
       paymentProgressTimer: null,
       currencyAmount: null,
       plan: PLANS.free,
-      premiumPlans: ['premium', 'premium_plus', 'enterprise'].map((plan) => ({
+      premiumPlans: ['premium', 'premium_plus'].map((plan) => ({
         ...PLANS[plan],
         id: plan,
       })),
