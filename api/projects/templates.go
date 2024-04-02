@@ -142,6 +142,14 @@ func UpdateTemplate(w http.ResponseWriter, r *http.Request) {
 		template.Arguments = nil
 	}
 
+	if template.Type != db.TemplateDeploy {
+		template.BuildTemplateID = nil
+	}
+
+	if template.Type != db.TemplateBuild {
+		template.StartVersion = nil
+	}
+
 	err := helpers.Store(r).UpdateTemplate(template)
 	if err != nil {
 		helpers.WriteError(w, err)
