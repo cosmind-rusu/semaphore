@@ -1,11 +1,12 @@
 package projects
 
 import (
+	"net/http"
+
 	"github.com/ansible-semaphore/semaphore/api/helpers"
 	"github.com/ansible-semaphore/semaphore/db"
 	"github.com/ansible-semaphore/semaphore/util"
 	log "github.com/sirupsen/logrus"
-	"net/http"
 
 	"github.com/gorilla/context"
 )
@@ -110,7 +111,7 @@ func createDemoProject(projectID int, noneKeyID int, emptyEnvID int, store db.St
 		Playbook:      "ping.yml",
 		Description:   &desc,
 		ProjectID:     projectID,
-		InventoryID:   prodInv.ID,
+		InventoryID:   &prodInv.ID,
 		EnvironmentID: &emptyEnvID,
 		RepositoryID:  demoRepo.ID,
 	})
@@ -127,7 +128,7 @@ func createDemoProject(projectID int, noneKeyID int, emptyEnvID int, store db.St
 		Playbook:      "build.yml",
 		Type:          db.TemplateBuild,
 		ProjectID:     projectID,
-		InventoryID:   buildInv.ID,
+		InventoryID:   &buildInv.ID,
 		EnvironmentID: &emptyEnvID,
 		RepositoryID:  demoRepo.ID,
 		StartVersion:  &startVersion,
@@ -142,7 +143,7 @@ func createDemoProject(projectID int, noneKeyID int, emptyEnvID int, store db.St
 		Type:            db.TemplateDeploy,
 		Playbook:        "deploy.yml",
 		ProjectID:       projectID,
-		InventoryID:     devInv.ID,
+		InventoryID:     &devInv.ID,
 		EnvironmentID:   &emptyEnvID,
 		RepositoryID:    demoRepo.ID,
 		BuildTemplateID: &buildTpl.ID,
@@ -159,7 +160,7 @@ func createDemoProject(projectID int, noneKeyID int, emptyEnvID int, store db.St
 		Type:            db.TemplateDeploy,
 		Playbook:        "deploy.yml",
 		ProjectID:       projectID,
-		InventoryID:     prodInv.ID,
+		InventoryID:     &prodInv.ID,
 		EnvironmentID:   &emptyEnvID,
 		RepositoryID:    demoRepo.ID,
 		BuildTemplateID: &buildTpl.ID,
@@ -216,12 +217,12 @@ func AddProject(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//_, err = store.CreateInventory(db.Inventory{
-	//	Name:      "None",
-	//	ProjectID: body.ID,
-	//	Type:      "none",
-	//	SSHKeyID:  &noneKey.ID,
-	//})
+	_, err = store.CreateInventory(db.Inventory{
+		Name:      "None",
+		ProjectID: body.ID,
+		Type:      "none",
+		SSHKeyID:  &noneKey.ID,
+	})
 
 	if err != nil {
 		helpers.WriteError(w, err)
@@ -247,19 +248,13 @@ func AddProject(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	desc := "Project Created"
-	oType := db.EventProject
-	_, err = store.CreateEvent(db.Event{
-		UserID:      &user.ID,
-		ProjectID:   &body.ID,
-		Description: &desc,
-		ObjectType:  &oType,
-		ObjectID:    &body.ID,
+	helpers.EventLog(r, helpers.EventLogCreate, helpers.EventLogItem{
+		UserID:      helpers.UserFromContext(r).ID,
+		ProjectID:   body.ID,
+		ObjectType:  db.EventProject,
+		ObjectID:    body.ID,
+		Description: "Project created",
 	})
-
-	if err != nil {
-		log.Error(err)
-	}
 
 	helpers.WriteJSON(w, http.StatusCreated, body)
 }

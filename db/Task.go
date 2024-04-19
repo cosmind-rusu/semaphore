@@ -1,8 +1,11 @@
 package db
 
 import (
-	"github.com/ansible-semaphore/semaphore/lib"
+	"fmt"
 	"time"
+
+	"github.com/ansible-semaphore/semaphore/pkg/task_logger"
+	"github.com/ansible-semaphore/semaphore/util"
 )
 
 // Task is a model of a task which will be executed by the runner
@@ -11,7 +14,7 @@ type Task struct {
 	TemplateID int `db:"template_id" json:"template_id" binding:"required"`
 	ProjectID  int `db:"project_id" json:"project_id"`
 
-	Status lib.TaskStatus `db:"status" json:"status"`
+	Status task_logger.TaskStatus `db:"status" json:"status"`
 
 	Debug  bool `db:"debug" json:"debug"`
 	DryRun bool `db:"dry_run" json:"dry_run"`
@@ -69,6 +72,15 @@ func (task *Task) GetIncomingVersion(d Store) *string {
 	}
 
 	return buildTask.GetIncomingVersion(d)
+}
+
+func (task *Task) GetUrl() *string {
+	if util.Config.WebHost != "" {
+		taskUrl := fmt.Sprintf("%s/project/%d/history?t=%d", util.Config.WebHost, task.ProjectID, task.ID)
+		return &taskUrl
+	}
+
+	return nil
 }
 
 func (task *Task) ValidateNewTask(template Template) error {
