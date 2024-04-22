@@ -102,7 +102,7 @@
           style="color: gold;"
         >
           <v-icon color="#FFCA28">mdi-license</v-icon>
-          PREMIUM LICENSE
+          PREMIUM SUBSCRIPTION
         </h4>
 
         <v-alert

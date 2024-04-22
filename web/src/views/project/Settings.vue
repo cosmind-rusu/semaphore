@@ -68,7 +68,7 @@
       <v-row align="center">
         <v-col class="shrink">
           <v-btn color="error" @click="deleteProjectDialog = true">
-            {{ projectType === 'premium' ? 'Delete License' : $t('deleteProject2') }}
+            {{ projectType === 'premium' ? 'Delete Subscription' : $t('deleteProject2') }}
           </v-btn>
         </v-col>
         <v-col class="grow">

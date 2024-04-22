@@ -13,8 +13,8 @@
 
     <v-text-field
       v-model="item.name"
-      label="License name"
-      :rules="[v => !!v || 'License name is required']"
+      label="Subscription Name"
+      :rules="[v => !!v || 'Subscription Name is required']"
       required
       :disabled="formSaving"
     ></v-text-field>

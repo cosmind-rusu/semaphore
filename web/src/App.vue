@@ -82,7 +82,7 @@
           v-if="newProjectType === 'premium'" color="#FFCA28" class="mr-2"
         >mdi-license
         </v-icon>
-        {{ newProjectType === 'premium' ? 'Buy Premium License' : $t('newProject') }}
+        {{ newProjectType === 'premium' ? 'Buy Premium Subscription' : $t('newProject') }}
       </template>
       <template v-slot:form="{ onSave, onError, needSave, needReset }">
         <PremiumLicenseProjectForm
@@ -242,7 +242,7 @@
             </v-list-item-icon>
 
             <v-list-item-content style="font-weight: bold; color: #FFCA28;">
-              Buy Premium License
+              Buy Premium Subscription
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -269,7 +269,7 @@
 
           <v-list-item-content>
             <v-list-item-title>
-              Buy Premium License
+              Buy Premium Subscription
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
