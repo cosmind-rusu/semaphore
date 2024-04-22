@@ -73,13 +73,28 @@
 
     <EditDialog
       v-model="newProjectDialog"
-      save-button-text="Create"
-      :title="$t('newProject')"
+      :save-button-text="newProjectType === 'premium' ? 'Continue' : 'Create'"
       event-name="i-project"
+      @close="onNewProjectDialogueClosed()"
     >
+      <template v-slot:title="{}">
+        <v-icon
+          v-if="newProjectType === 'premium'" color="#FFCA28" class="mr-2"
+        >mdi-license
+        </v-icon>
+        {{ newProjectType === 'premium' ? 'Buy Premium License' : $t('newProject') }}
+      </template>
       <template v-slot:form="{ onSave, onError, needSave, needReset }">
+        <PremiumLicenseProjectForm
+          v-if="newProjectType === 'premium'"
+          item-id="new"
+          @save="onSave"
+          @error="onError"
+          :need-save="needSave"
+          :need-reset="needReset"
+        />
         <ProjectForm
-          v-if="newProjectType === ''"
+          v-else
           item-id="new"
           @save="onSave"
           @error="onError"
@@ -143,7 +158,11 @@
               v-on="on"
             >
               <v-list-item-icon>
+
+                <v-icon v-if="project.type === 'premium'" color="#FFCA28">mdi-license</v-icon>
+
                 <v-avatar
+                  v-else
                   :color="getProjectColor(project)"
                   size="24"
                   style="font-size: 13px; font-weight: bold;"
@@ -173,7 +192,10 @@
             @click="selectProject(item.id)"
           >
             <v-list-item-icon>
+              <v-icon v-if="item.type === 'premium'" color="#FFCA28">mdi-license</v-icon>
+
               <v-avatar
+                v-else
                 :color="getProjectColor(item)"
                 size="24"
                 style="font-size: 13px; font-weight: bold;"
@@ -184,8 +206,10 @@
             <v-list-item-content>{{ item.name }}</v-list-item-content>
           </v-list-item>
 
+          <v-divider v-if="user.can_create_project"/>
+
           <v-list-item
-            @click="newProjectDialog = true; newProjectType = '';"
+            @click="showNewProjectDialogue()"
             v-if="user.can_create_project"
           >
             <v-list-item-icon>
@@ -206,24 +230,61 @@
               {{ $t('restoreProject') }}
             </v-list-item-content>
           </v-list-item>
+
+          <v-divider v-if="user.can_create_project"/>
+
+          <v-list-item
+            @click="showNewProjectDialogue('premium')"
+            v-if="user.can_create_project"
+          >
+            <v-list-item-icon>
+              <v-icon color="#FFCA28">mdi-license</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content style="font-weight: bold; color: #FFCA28;">
+              Buy Premium License
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
       </v-menu>
 
       <v-list class="pt-0" v-if="!project">
+
         <v-list-item key="new_project" :to="`/project/new`">
           <v-list-item-icon>
             <v-icon>mdi-plus</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>{{ $t('newProject') }}</v-list-item-title>
+            <v-list-item-title>
+              {{ $t('newProject') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
+        <v-list-item key="new_premium_license" :to="`/project/premium`">
+          <v-list-item-icon>
+            <v-icon color="#FFCA28">mdi-license</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>
+              Buy Premium License
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
       </v-list>
 
       <v-list class="pt-0" v-if="project">
 
-        <v-list-item key="dashboard" :to="`/project/${projectId}/history`">
+        <v-list-item
+          key="dashboard"
+          :to="
+            project.type === 'premium'
+            ? `/project/${projectId}/billing`
+            : `/project/${projectId}/history`"
+        >
           <v-list-item-icon>
             <v-icon>mdi-view-dashboard</v-icon>
           </v-list-item-icon>
@@ -240,6 +301,20 @@
 
           <v-list-item-content>
             <v-list-item-title>{{ $t('taskTemplates') }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item
+          v-if="project.type === 'premium'"
+          key="support"
+          :to="`/project/${projectId}/support`"
+        >
+          <v-list-item-icon>
+            <v-icon>mdi-chat</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>Support Chat</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -646,6 +721,7 @@ import ChangePasswordForm from '@/components/ChangePasswordForm.vue';
 import EventBus from '@/event-bus';
 import socket from '@/socket';
 import SubscriptionForm from '@/components/SubscriptionForm.vue';
+import PremiumLicenseProjectForm from '@/components/PremiumLicenseProjectForm.vue';
 
 const PROJECT_COLORS = [
   'red',
@@ -721,6 +797,7 @@ export default {
   name: 'App',
   components: {
     SubscriptionForm,
+    PremiumLicenseProjectForm,
     ChangePasswordForm,
     UserForm,
     EditDialog,
@@ -766,8 +843,14 @@ export default {
     async projects(val) {
       if (val.length === 0
         && this.$route.path.startsWith('/project/')
-        && this.$route.path !== '/project/new') {
-        await this.$router.push({ path: '/project/new' });
+        && this.$route.path !== '/project/new'
+        && this.$route.path !== '/project/premium'
+      ) {
+        if (this.$route.query.new_project === 'premium') {
+          await this.$router.push({ path: '/project/premium' });
+        } else {
+          await this.$router.push({ path: '/project/new' });
+        }
       }
     },
 
@@ -779,6 +862,14 @@ export default {
         if (taskId) {
           EventBus.$emit('i-show-task', { taskId });
         }
+      }
+
+      if (this.projects.length > 0 && this.$route.query.new_project) {
+        EventBus.$emit('i-new-project', { projectType: this.$route.query.new_project });
+      }
+
+      if ((this.project || {}).type === 'premium' && val.path.endsWith('/history')) {
+        await this.$router.replace({ path: `/project/${this.projectId}/billing/${window.location.search}` });
       }
     },
 
@@ -855,6 +946,10 @@ export default {
       this.state = 'error';
       socket.stop();
     }
+
+    if ((this.project || {}).type === 'premium' && this.$route.path.endsWith('/history')) {
+      await this.$router.replace({ path: `/project/${this.projectId}/billing` });
+    }
   },
 
   mounted() {
@@ -870,6 +965,12 @@ export default {
 
     EventBus.$on('i-show-drawer', async () => {
       this.drawer = true;
+    });
+
+    EventBus.$on('i-new-project', (e) => {
+      setTimeout(() => {
+        this.showNewProjectDialogue(e.projectType);
+      }, 500);
     });
 
     EventBus.$on('i-show-task', async (e) => {
@@ -953,7 +1054,7 @@ export default {
 
       switch (e.action) {
         case 'new':
-          await this.selectProject(e.item.id);
+          await this.selectProject(e.item.id, { new_project: undefined });
           break;
         case 'delete':
           if (this.projectId === e.item.id && this.projects.length > 0) {
@@ -977,6 +1078,11 @@ export default {
     selectLanguage(lang) {
       localStorage.setItem('lang', lang);
       window.location.reload();
+    },
+
+    async onNewProjectDialogueClosed() {
+      const query = { ...this.$route.query, new_project: undefined };
+      await this.$router.replace({ query });
     },
 
     async onTaskLogDialogClosed() {
@@ -1006,12 +1112,20 @@ export default {
           EventBus.$emit('i-show-task', { taskId });
         }
       }
+
+      if (this.projects.length > 0 && this.$route.query.new_project != null) {
+        EventBus.$emit('i-new-project', { projectType: this.$route.query.new_project });
+      }
     },
 
     async trySelectMostSuitableProject() {
       if (this.projects.length === 0) {
-        if (this.$route.path !== '/project/new') {
-          await this.$router.push({ path: '/project/new' });
+        if (this.$route.path !== '/project/new' && this.$route.path !== '/project/premium') {
+          if (this.$route.query.new_project === 'premium') {
+            await this.$router.push({ path: '/project/premium' });
+          } else {
+            await this.$router.push({ path: '/project/new' });
+          }
         }
         return;
       }
@@ -1036,7 +1150,7 @@ export default {
       }
     },
 
-    async selectProject(projectId) {
+    async selectProject(projectId, overriderQuery = {}) {
       this.userRole = (await axios({
         method: 'get',
         url: `/api/project/${projectId}/role`,
@@ -1048,7 +1162,35 @@ export default {
         return;
       }
 
-      await this.$router.push({ path: `/project/${projectId}` });
+      axios({
+        method: 'get',
+        url: `/billing/projects/${projectId}`,
+        responseType: 'json',
+      }).catch(() => {
+      });
+
+      let query = {};
+
+      switch (this.$route.path) {
+        case '/project/new':
+          query.new_project = '';
+          break;
+        case '/project/premium':
+          query.new_project = 'premium';
+          break;
+        default:
+          break;
+      }
+
+      query = {
+        ...query,
+        ...overriderQuery,
+      };
+
+      await this.$router.push({
+        path: `/project/${projectId}${window.location.search}`,
+        query,
+      });
     },
 
     async loadProjects() {
