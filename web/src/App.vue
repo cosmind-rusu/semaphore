@@ -1075,6 +1075,11 @@ export default {
       });
     },
 
+    showNewProjectDialogue(projectType = '') {
+      this.newProjectDialog = true;
+      this.newProjectType = projectType;
+    },
+
     selectLanguage(lang) {
       localStorage.setItem('lang', lang);
       window.location.reload();
