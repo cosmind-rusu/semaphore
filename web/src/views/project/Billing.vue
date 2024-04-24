@@ -44,18 +44,6 @@
         </v-card-text>
         <v-card-actions class="pb-4 pt-0 d-block">
 
-          <v-btn
-
-            color="warning"
-            @click="makeCoinbasePayment('coinbase')"
-            large
-            depressed
-            style="width: 100%"
-          >
-            <v-icon left>mdi-bitcoin</v-icon>
-            Pay Crypto
-          </v-btn>
-
           <div class="mt-4" id="paypal-button-container"></div>
 
         </v-card-actions>

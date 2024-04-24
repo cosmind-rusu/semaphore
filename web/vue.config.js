@@ -4,11 +4,15 @@ module.exports = {
       historyApiFallback: true,
       proxy: {
         '^/api': {
-          target: 'http://localhost:3000',
+          target: 'http://localhost:3330',
         },
         '^/billing': {
           target: 'http://localhost:2500',
           pathRewrite(path) { return path.replace('/billing/', '/'); },
+        },
+        '^/helpdesk': {
+          target: 'http://localhost:3000',
+          pathRewrite(path) { return path.replace('/helpdesk/', '/'); },
         },
       },
     },
