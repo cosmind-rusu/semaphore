@@ -80,11 +80,14 @@
               </td>
               <td>
                 <code
+                  class="mr-2"
                   :style="{
-                    background: asset.architecture === 'amd64' ? 'green' : 'lightblue',
-                    color: asset.architecture === 'amd64' ? 'white' : 'black',
+                    background: architecture === 'amd64' ? 'green' : 'lightblue',
+                    color: architecture === 'amd64' ? 'white' : 'black',
                   }"
-                >{{ asset.architecture }}</code>
+                  v-for="architecture in asset.architecture"
+                  :key="architecture"
+                >{{ architecture }}</code>
               </td>
               <td>
                 <v-icon
@@ -123,6 +126,10 @@ const PLATFORM_ICONS = {
     icon: 'microsoft-windows',
     color: 'blue',
   },
+  docker: {
+    icon: 'docker',
+    color: 'blue',
+  },
   freebsd: {
     icon: 'freebsd',
     color: 'red',
@@ -154,6 +161,14 @@ const EXTENSION_ICONS = {
     icon: 'archive',
     color: 'gray',
   },
+  snap: {
+    icon: 'docker',
+    color: 'blue',
+  },
+  '': {
+    icon: '',
+    color: '',
+  },
 };
 
 export default {
@@ -175,43 +190,47 @@ export default {
       }],
       assets: [{
         platform: 'linux',
-        architecture: 'amd64',
+        architecture: ['amd64'],
         extension: 'tar.gz',
       }, {
         platform: 'linux',
-        architecture: 'arm64',
+        architecture: ['arm64'],
         extension: 'tar.gz',
       }, {
         platform: 'linux',
-        architecture: 'amd64',
+        architecture: ['amd64'],
         extension: 'deb',
       }, {
         platform: 'linux',
-        architecture: 'arm64',
+        architecture: ['arm64'],
         extension: 'deb',
       }, {
         platform: 'linux',
-        architecture: 'amd64',
+        architecture: ['amd64'],
         extension: 'rpm',
       }, {
         platform: 'linux',
-        architecture: 'arm64',
+        architecture: ['arm64'],
         extension: 'rpm',
       }, {
+        platform: 'docker',
+        architecture: ['amd64', 'arm64'],
+        extension: '',
+      }, {
         platform: 'freebsd',
-        architecture: 'amd64',
+        architecture: ['amd64'],
         extension: 'tar.gz',
       }, {
         platform: 'freebsd',
-        architecture: 'arm64',
+        architecture: ['arm64'],
         extension: 'tar.gz',
       }, {
         platform: 'darwin',
-        architecture: 'amd64',
+        architecture: ['amd64'],
         extension: 'tar.gz',
       }, {
         platform: 'windows',
-        architecture: 'amd64',
+        architecture: ['amd64'],
         extension: 'zip',
       }],
     };
