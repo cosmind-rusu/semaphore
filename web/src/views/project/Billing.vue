@@ -90,6 +90,13 @@
       </v-card>
     </v-dialog>
 
+    <YesNoDialog
+      title="New subscription key"
+      text="Are you sure?"
+      v-model="regenerateKeyDialog"
+      @yes="regenerateKey()"
+    />
+
     <v-toolbar flat>
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
       <v-toolbar-title>{{ $t('dashboard') }}</v-toolbar-title>
@@ -160,22 +167,13 @@
               <span v-else>{{ project.planFinishDate | formatDate2 }}</span>
             </v-timeline-item>
 
-<!--            <v-timeline-item-->
-<!--              v-if="projectType === 'premium'"-->
-<!--              fill-dot-->
-<!--              icon="mdi-server"-->
-<!--              class="text-subtitle-1 align-center"-->
-<!--            >-->
-<!--              Servers: {{ project.servers || 0 }} / {{ plan.servers || '&mdash;' }} used-->
-<!--            </v-timeline-item>-->
-
             <v-timeline-item
               v-if="projectType === 'premium'"
               fill-dot
               icon="mdi-license"
               class="text-subtitle-1 align-center"
             >
-              License Key: <code>{{ project.licenseKey || '&mdash;' }}</code>
+              Subscription Key: <code>{{ project.licenseKey || '&mdash;' }}</code>
               <v-btn
                 v-if="project.licenseKey"
                 class="ml-2"
@@ -183,6 +181,14 @@
                 @click="copyToClipboard(project.licenseKey)"
               >
                 <v-icon>mdi-content-copy</v-icon>
+              </v-btn>
+              <v-btn
+                v-if="project.licenseKey"
+                class="ml-2"
+                icon
+                @click="regenerateKeyDialog = true"
+              >
+                <v-icon>mdi-refresh</v-icon>
               </v-btn>
             </v-timeline-item>
 
@@ -408,6 +414,7 @@ import EventBus from '@/event-bus';
 import axios from 'axios';
 import { loadScript } from '@paypal/paypal-js';
 import { getErrorMessage } from '@/lib/error';
+import YesNoDialog from '@/components/YesNoDialog.vue';
 
 const PLANS = {
   free: {
@@ -448,7 +455,7 @@ const PLANS = {
 };
 
 export default {
-  components: {},
+  components: { YesNoDialog },
   props: {
     projectId: Number,
     projectType: String,
@@ -470,6 +477,7 @@ export default {
       paypal: null,
       paypalButton: null,
       paypalButtonRendering: true,
+      regenerateKeyDialog: null,
     };
   },
 
@@ -493,6 +501,18 @@ export default {
   },
 
   methods: {
+    async regenerateKey() {
+      const { data } = (await axios({
+        method: 'post',
+        url: `/billing/projects/${this.projectId}/subscription/rekey`,
+        responseType: 'json',
+        data: {
+        },
+      }));
+
+      this.project.licenseKey = data.key;
+    },
+
     getPlanColor(plan) {
       if (plan === 'free') {
         return 'success';
