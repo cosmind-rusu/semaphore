@@ -435,23 +435,15 @@ const PLANS = {
   premium: {
     price: 12,
     users: 4,
-
-    servers: 1,
-    runners: 5,
   },
   premium_plus: {
     price: 40,
     users: 8,
-
-    servers: 3,
-    runners: 20,
   },
-  // enterprise: {
-  //   price: 250,
-  //   servers: 10,
-  //   runners: 100,
-  //   users: 70,
-  // },
+  enterprise: {
+    price: -1,
+    users: 1000000,
+  },
 };
 
 export default {
