@@ -305,7 +305,6 @@
         </v-list-item>
 
         <v-list-item
-          v-if="project.type === 'premium'"
           key="support"
           :to="`/project/${projectId}/support`"
         >
