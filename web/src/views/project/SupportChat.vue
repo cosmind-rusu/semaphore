@@ -8,7 +8,7 @@
     <iframe
       class="crisp_chat"
       title="Support Desk"
-      :src="`/helpdesk/projects/${projectId}/admin/panel/tickets/my-tickets`" />
+      :src="`/helpdesk/projects/${projectId}`" />
   </div>
 
 </template>
