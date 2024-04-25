@@ -40,78 +40,158 @@
       </v-alert>
     </div>
     <div class="pa-4" v-else>
-      <div v-for="version of versions" :key="version.id">
-
-        <h2 class="pl-4">
-          {{ version.semver }}
-          <v-chip small class="ml-2 mb-1" color="error">Premium</v-chip>
-        </h2>
-
-        <v-simple-table>
-          <template v-slot:default>
-            <thead>
-            <tr>
-              <th class="text-left">
-                Platform
-              </th>
-              <th class="text-left">
-                Architecture
-              </th>
-              <th class="text-left">
-                Type
-              </th>
-              <th class="text-left">
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr
-              v-for="asset in assets"
-              :key="getAssetUrl(asset, version)"
-            >
-              <td>
-                <v-icon
-                  :color="PLATFORM_ICONS[asset.platform].color"
-                  class="mr-2"
+      <v-expansion-panels accordion focusable :value="0">
+        <v-expansion-panel
+          v-for="version of versions"
+          :key="version.id"
+        >
+          <v-expansion-panel-header>
+            <h2 class="pl-4 pt-1">
+              {{ version.semver }}
+              <v-chip v-if="version.latest" small class="ml-2 mb-1" color="success">Latest</v-chip>
+            </h2>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <v-simple-table>
+              <template v-slot:default>
+                <thead>
+                <tr>
+                  <th class="text-left">
+                    Platform
+                  </th>
+                  <th class="text-left">
+                    Architecture
+                  </th>
+                  <th class="text-left">
+                    Type
+                  </th>
+                  <th class="text-left">
+                  </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr
+                  v-for="asset in assets"
+                  :key="getAssetUrl(asset, version)"
                 >
-                  mdi-{{ PLATFORM_ICONS[asset.platform].icon }}
-                </v-icon>
-                {{ asset.platform }}
-              </td>
-              <td>
-                <code
-                  class="mr-2"
-                  :style="{
+                  <td>
+                    <v-icon
+                      :color="PLATFORM_ICONS[asset.platform].color"
+                      class="mr-2"
+                    >
+                      mdi-{{ PLATFORM_ICONS[asset.platform].icon }}
+                    </v-icon>
+                    {{ asset.platform }}
+                  </td>
+                  <td>
+                    <code
+                      class="mr-2"
+                      :style="{
                     background: architecture === 'amd64' ? 'green' : 'lightblue',
                     color: architecture === 'amd64' ? 'white' : 'black',
                   }"
-                  v-for="architecture in asset.architecture"
-                  :key="architecture"
-                >{{ architecture }}</code>
-              </td>
-              <td>
-                <v-icon
-                  :color="EXTENSION_ICONS[asset.extension].color"
-                  class="mr-2"
-                >
-                  mdi-{{ EXTENSION_ICONS[asset.extension].icon }}
-                </v-icon>
-                {{ asset.extension }}
-              </td>
-              <td>
-                <v-btn
-                  style="text-decoration: none !important;"
-                  color="primary"
-                  :href="getAssetUrl(asset, version)"
-                >
-                  Download
-                </v-btn>
-              </td>
-            </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
-      </div>
+                      v-for="architecture in asset.architecture"
+                      :key="architecture"
+                    >{{ architecture }}</code>
+                  </td>
+                  <td>
+                    <v-icon
+                      :color="EXTENSION_ICONS[asset.extension].color"
+                      class="mr-2"
+                    >
+                      mdi-{{ EXTENSION_ICONS[asset.extension].icon }}
+                    </v-icon>
+                    {{ asset.extension }}
+                  </td>
+                  <td>
+                    <v-btn
+                      style="text-decoration: none !important;"
+                      color="primary"
+                      :href="getAssetUrl(asset, version)"
+                    >
+                      Download
+                    </v-btn>
+                  </td>
+                </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
+
+<!--      <div v-for="version of versions" :key="version.id">-->
+
+<!--        <h2 class="pl-4">-->
+<!--          {{ version.semver }}-->
+<!--          <v-chip small class="ml-2 mb-1" color="error">Premium</v-chip>-->
+<!--        </h2>-->
+
+<!--        <v-simple-table>-->
+<!--          <template v-slot:default>-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--              <th class="text-left">-->
+<!--                Platform-->
+<!--              </th>-->
+<!--              <th class="text-left">-->
+<!--                Architecture-->
+<!--              </th>-->
+<!--              <th class="text-left">-->
+<!--                Type-->
+<!--              </th>-->
+<!--              <th class="text-left">-->
+<!--              </th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr-->
+<!--              v-for="asset in assets"-->
+<!--              :key="getAssetUrl(asset, version)"-->
+<!--            >-->
+<!--              <td>-->
+<!--                <v-icon-->
+<!--                  :color="PLATFORM_ICONS[asset.platform].color"-->
+<!--                  class="mr-2"-->
+<!--                >-->
+<!--                  mdi-{{ PLATFORM_ICONS[asset.platform].icon }}-->
+<!--                </v-icon>-->
+<!--                {{ asset.platform }}-->
+<!--              </td>-->
+<!--              <td>-->
+<!--                <code-->
+<!--                  class="mr-2"-->
+<!--                  :style="{-->
+<!--                    background: architecture === 'amd64' ? 'green' : 'lightblue',-->
+<!--                    color: architecture === 'amd64' ? 'white' : 'black',-->
+<!--                  }"-->
+<!--                  v-for="architecture in asset.architecture"-->
+<!--                  :key="architecture"-->
+<!--                >{{ architecture }}</code>-->
+<!--              </td>-->
+<!--              <td>-->
+<!--                <v-icon-->
+<!--                  :color="EXTENSION_ICONS[asset.extension].color"-->
+<!--                  class="mr-2"-->
+<!--                >-->
+<!--                  mdi-{{ EXTENSION_ICONS[asset.extension].icon }}-->
+<!--                </v-icon>-->
+<!--                {{ asset.extension }}-->
+<!--              </td>-->
+<!--              <td>-->
+<!--                <v-btn-->
+<!--                  style="text-decoration: none !important;"-->
+<!--                  color="primary"-->
+<!--                  :href="getAssetUrl(asset, version)"-->
+<!--                >-->
+<!--                  Download-->
+<!--                </v-btn>-->
+<!--              </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--          </template>-->
+<!--        </v-simple-table>-->
+<!--      </div>-->
     </div>
   </div>
 </template>
@@ -185,6 +265,10 @@ export default {
       project: null,
       deleteProjectDialog: null,
       versions: [{
+        semver: '2.9.72',
+        id: '863ba8c7-f4ea-4921-8883-8af1ca254a6c',
+        latest: true,
+      }, {
         semver: '2.9.63',
         id: '07238e2b-6cc1-422d-b1f9-0deb45cf4d93',
       }],
