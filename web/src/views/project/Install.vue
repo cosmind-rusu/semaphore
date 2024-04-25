@@ -1,6 +1,37 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div v-if="project != null">
 
+    <v-dialog
+      v-model="dockerGuideDialog"
+      max-width="600"
+      persistent
+      :transition="false"
+    >
+      <v-card>
+        <v-card-title>
+          Docker usage
+          <v-spacer></v-spacer>
+          <v-btn
+            @click="dockerGuideDialog = false"
+            icon
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text class="text-xs-center pb-0">
+          <pre>
+docker run -p 3000:3000 --name semaphore \
+    -e SEMAPHORE_DB_DIALECT=bolt \
+    -e SEMAPHORE_ADMIN=admin \
+    -e SEMAPHORE_ADMIN_PASSWORD=changeme \
+    -e SEMAPHORE_ADMIN_NAME=Admin \
+    -e SEMAPHORE_ADMIN_EMAIL=admin@localhost \
+    -d semaphoreui/semaphore:{{dockerGuideVersion.semver}}-premium
+          </pre>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
     <v-toolbar flat>
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
       <v-toolbar-title>{{ $t('dashboard') }}</v-toolbar-title>
@@ -105,6 +136,15 @@
                   </td>
                   <td>
                     <v-btn
+                      v-if="asset.platform === 'docker'"
+                      style="text-decoration: none !important;"
+                      color="primary"
+                      @click="showDockerGuide(asset, version)"
+                    >
+                      Install
+                    </v-btn>
+                    <v-btn
+                      v-else
                       style="text-decoration: none !important;"
                       color="primary"
                       :href="getAssetUrl(asset, version)"
@@ -119,79 +159,6 @@
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
-
-<!--      <div v-for="version of versions" :key="version.id">-->
-
-<!--        <h2 class="pl-4">-->
-<!--          {{ version.semver }}-->
-<!--          <v-chip small class="ml-2 mb-1" color="error">Premium</v-chip>-->
-<!--        </h2>-->
-
-<!--        <v-simple-table>-->
-<!--          <template v-slot:default>-->
-<!--            <thead>-->
-<!--            <tr>-->
-<!--              <th class="text-left">-->
-<!--                Platform-->
-<!--              </th>-->
-<!--              <th class="text-left">-->
-<!--                Architecture-->
-<!--              </th>-->
-<!--              <th class="text-left">-->
-<!--                Type-->
-<!--              </th>-->
-<!--              <th class="text-left">-->
-<!--              </th>-->
-<!--            </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            <tr-->
-<!--              v-for="asset in assets"-->
-<!--              :key="getAssetUrl(asset, version)"-->
-<!--            >-->
-<!--              <td>-->
-<!--                <v-icon-->
-<!--                  :color="PLATFORM_ICONS[asset.platform].color"-->
-<!--                  class="mr-2"-->
-<!--                >-->
-<!--                  mdi-{{ PLATFORM_ICONS[asset.platform].icon }}-->
-<!--                </v-icon>-->
-<!--                {{ asset.platform }}-->
-<!--              </td>-->
-<!--              <td>-->
-<!--                <code-->
-<!--                  class="mr-2"-->
-<!--                  :style="{-->
-<!--                    background: architecture === 'amd64' ? 'green' : 'lightblue',-->
-<!--                    color: architecture === 'amd64' ? 'white' : 'black',-->
-<!--                  }"-->
-<!--                  v-for="architecture in asset.architecture"-->
-<!--                  :key="architecture"-->
-<!--                >{{ architecture }}</code>-->
-<!--              </td>-->
-<!--              <td>-->
-<!--                <v-icon-->
-<!--                  :color="EXTENSION_ICONS[asset.extension].color"-->
-<!--                  class="mr-2"-->
-<!--                >-->
-<!--                  mdi-{{ EXTENSION_ICONS[asset.extension].icon }}-->
-<!--                </v-icon>-->
-<!--                {{ asset.extension }}-->
-<!--              </td>-->
-<!--              <td>-->
-<!--                <v-btn-->
-<!--                  style="text-decoration: none !important;"-->
-<!--                  color="primary"-->
-<!--                  :href="getAssetUrl(asset, version)"-->
-<!--                >-->
-<!--                  Download-->
-<!--                </v-btn>-->
-<!--              </td>-->
-<!--            </tr>-->
-<!--            </tbody>-->
-<!--          </template>-->
-<!--        </v-simple-table>-->
-<!--      </div>-->
     </div>
   </div>
 </template>
@@ -264,6 +231,9 @@ export default {
       EXTENSION_ICONS,
       project: null,
       deleteProjectDialog: null,
+      dockerGuideDialog: null,
+      dockerGuideVersion: {},
+
       versions: [{
         semver: '2.9.72',
         id: '863ba8c7-f4ea-4921-8883-8af1ca254a6c',
@@ -331,6 +301,11 @@ export default {
   },
 
   methods: {
+    showDockerGuide(asset, version) {
+      this.dockerGuideDialog = true;
+      this.dockerGuideVersion = version;
+    },
+
     getAssetUrl(asset, version) {
       return `https://www.semui.co/uploads/v${version.semver}-premium/${version.id}/semaphore_${version.semver}-premium_${asset.platform}_${asset.architecture}.${asset.extension}`;
     },
