@@ -441,7 +441,7 @@ const PLANS = {
     users: 8,
   },
   enterprise: {
-    price: -1,
+    price: 1000,
     users: 1000000,
   },
 };
