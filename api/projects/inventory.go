@@ -170,9 +170,11 @@ func UpdateInventory(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
+	case db.InventoryTerraformWorkspace:
+		break
 	default:
 		helpers.WriteErrorStatus(w,
-			"unknown inventory type: %s"+string(inventory.Type),
+			"unknown inventory type: "+string(inventory.Type),
 			http.StatusBadRequest)
 		return
 	}
