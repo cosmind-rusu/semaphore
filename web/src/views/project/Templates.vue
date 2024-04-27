@@ -26,45 +26,13 @@
       </v-card>
     </v-dialog>
 
-    <EditDialog
-      :max-width="700"
-      v-model="editDialog"
-      :save-button-text="$t('create')"
-      :icon="APP_ICONS[itemApp].icon"
-      :icon-color="$vuetify.theme.dark ? APP_ICONS[itemApp].darkColor : APP_ICONS[itemApp].color"
-      :title="$t('newTemplate') + ' \'' + APP_TITLE[itemApp] + '\''"
-      @save="loadItems()"
-    >
-      <template v-slot:form="{ onSave, onError, needSave, needReset }">
-        <TerraformTemplateForm
-          v-if="itemApp === 'terraform'"
-          :project-id="projectId"
-          item-id="new"
-          @save="onSave"
-          @error="onError"
-          :need-save="needSave"
-          :need-reset="needReset"
-        />
-        <BashTemplateForm
-          v-else-if="itemApp === 'bash'"
-          :project-id="projectId"
-          item-id="new"
-          @save="onSave"
-          @error="onError"
-          :need-save="needSave"
-          :need-reset="needReset"
-        />
-        <TemplateForm
-          v-else
-          :project-id="projectId"
-          item-id="new"
-          @save="onSave"
-          @error="onError"
-          :need-save="needSave"
-          :need-reset="needReset"
-        />
-      </template>
-    </EditDialog>
+    <EditTemplateDialogue
+        v-model="editDialog"
+        :project-id="projectId"
+        :item-app="itemApp"
+        item-id="new"
+        @save="loadItems()"
+    ></EditTemplateDialogue>
 
     <NewTaskDialog
       v-model="newTaskDialog"
@@ -86,6 +54,7 @@
 
       <v-menu
         offset-y
+        :disabled="templateApps.length === 0"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -94,9 +63,11 @@
             color="primary"
             class="mr-1 pr-2"
             v-if="can(USER_PERMISSIONS.manageProjectResources)"
+            @click="templateApps.length > 0 || editItem('new')"
           >
             {{ $t('newTemplate') }}
-            <v-icon>mdi-chevron-down</v-icon>
+            <v-icon v-if="templateApps.length > 0">mdi-chevron-down</v-icon>
+            <span v-else class="pl-2"></span>
           </v-btn>
         </template>
         <v-list>
@@ -161,6 +132,7 @@
         <v-icon
           class="mr-3"
           small
+          v-if="templateApps.length > 0"
         >
           {{ APP_ICONS[item.app].icon }}
         </v-icon>
@@ -275,7 +247,6 @@
 </style>
 <script>
 import ItemListPageBase from '@/components/ItemListPageBase';
-import TemplateForm from '@/components/TemplateForm.vue';
 import TaskLink from '@/components/TaskLink.vue';
 import axios from 'axios';
 import EditViewsForm from '@/components/EditViewsForm.vue';
@@ -286,20 +257,17 @@ import TaskStatus from '@/components/TaskStatus.vue';
 import socket from '@/socket';
 import NewTaskDialog from '@/components/NewTaskDialog.vue';
 
-import TerraformTemplateForm from '@/components/TerraformTemplateForm.vue';
-import BashTemplateForm from '@/components/BashTemplateForm.vue';
 import {
   APP_ICONS,
   APP_TITLE,
   TEMPLATE_TYPE_ACTION_TITLES,
   TEMPLATE_TYPE_ICONS,
 } from '@/lib/constants';
+import EditTemplateDialogue from '@/components/EditTemplateDialogue.vue';
 
 export default {
   components: {
-    BashTemplateForm,
-    TerraformTemplateForm,
-    TemplateForm,
+    EditTemplateDialogue,
     TableSettingsSheet,
     TaskStatus,
     TaskLink,
