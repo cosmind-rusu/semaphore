@@ -235,9 +235,12 @@ export default {
       dockerGuideVersion: {},
 
       versions: [{
+        semver: '2.9.73',
+        id: '594d728f-5f07-4314-8f8e-23feb4ad4dfb',
+        latest: true,
+      }, {
         semver: '2.9.72',
         id: '863ba8c7-f4ea-4921-8883-8af1ca254a6c',
-        latest: true,
       }, {
         semver: '2.9.63',
         id: '07238e2b-6cc1-422d-b1f9-0deb45cf4d93',
