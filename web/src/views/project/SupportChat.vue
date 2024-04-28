@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background: #f1f1f1; height: 100%;">
     <v-toolbar flat>
       <v-app-bar-nav-icon style="color: white;" @click="showDrawer()"></v-app-bar-nav-icon>
       <v-toolbar-title>Service Desk</v-toolbar-title>
