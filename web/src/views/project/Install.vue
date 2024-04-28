@@ -1,9 +1,34 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div v-if="project != null">
+    <v-dialog
+      :max-width="600"
+      v-model="detailsDialog"
+      persistent
+      :transition="false"
+      scrollable
+    >
+      <v-card>
+        <v-card-title>
+          {{ detailsVersion.semver }}
+          <v-spacer></v-spacer>
+          <v-btn icon @click="detailsDialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text class="pa-0">
+          <iframe
+            title=""
+            style="border: 0; display: block; padding: 0; margin: 0; width: 100%; height: 400px;"
+            :src="`https://www.semui.co/releases/semaphore-v${(detailsVersion.semver || '').replaceAll('.', '_')}-premium/fragment`"
+          ></iframe>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
 
     <v-dialog
       v-model="dockerGuideDialog"
-      max-width="600"
+      max-width="800"
       persistent
       :transition="false"
     >
@@ -26,7 +51,7 @@ docker run -p 3000:3000 --name semaphore \
     -e SEMAPHORE_ADMIN_PASSWORD=changeme \
     -e SEMAPHORE_ADMIN_NAME=Admin \
     -e SEMAPHORE_ADMIN_EMAIL=admin@localhost \
-    -d semaphoreui/semaphore:v{{dockerGuideVersion.semver}}-premium
+    -d semaphoreui/semaphore:v{{ dockerGuideVersion.semver }}-premium
           </pre>
         </v-card-text>
       </v-card>
@@ -75,12 +100,27 @@ docker run -p 3000:3000 --name semaphore \
         <v-expansion-panel
           v-for="version of versions"
           :key="version.id"
+          class="justify-start"
         >
           <v-expansion-panel-header>
-            <h2 class="pl-4 pt-1">
+            <h2 style="flex: unset; width: 100px;">
               {{ version.semver }}
-              <v-chip v-if="version.latest" small class="ml-2 mb-1" color="success">Latest</v-chip>
+              <span
+                style="display: block; font-size: 14px; font-weight: normal;"
+              >{{ version.date }}</span>
             </h2>
+
+            <v-btn
+              style="max-width: 100px;"
+              class="ml-4"
+              color="primary"
+              outlined
+              @click="showDetails(version)"
+            >
+              Details
+            </v-btn>
+            <div class="pl-6">{{ version.description }}</div>
+
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-simple-table>
@@ -234,13 +274,19 @@ export default {
       dockerGuideDialog: null,
       dockerGuideVersion: {},
 
+      detailsDialog: null,
+      detailsVersion: {},
+
       versions: [{
         semver: '2.9.73',
         id: '594d728f-5f07-4314-8f8e-23feb4ad4dfb',
         latest: true,
+        date: 'April 27, 2024',
+        description: 'Terraform support bugfixes',
       }, {
         semver: '2.9.72',
         id: '863ba8c7-f4ea-4921-8883-8af1ca254a6c',
+        date: 'April 24, 2024',
       }, {
         semver: '2.9.63',
         id: '07238e2b-6cc1-422d-b1f9-0deb45cf4d93',
@@ -304,6 +350,15 @@ export default {
   },
 
   methods: {
+    showDetails(version) {
+      this.detailsVersion = version;
+      this.detailsDialog = true;
+      // eslint-disable-next-line no-restricted-globals
+      event.preventDefault();
+      // eslint-disable-next-line no-restricted-globals
+      event.stopPropagation();
+    },
+
     showDockerGuide(asset, version) {
       this.dockerGuideDialog = true;
       this.dockerGuideVersion = version;
