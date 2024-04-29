@@ -10,7 +10,7 @@
       @load="onLoad"
       class="crisp_chat"
       title="Support Desk"
-      :src="`/helpdesk/projects/${projectId}/${pathMatch || ''}`"/>
+      :src="`/helpdesk/projects/${projectId}/${pathMatch || 'dashboard'}`"/>
   </div>
 
 </template>
