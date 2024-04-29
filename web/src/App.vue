@@ -306,7 +306,7 @@
 
         <v-list-item
           key="support"
-          :to="`/project/${projectId}/support`"
+          :to="`/project/${projectId}/helpdesk`"
         >
           <v-list-item-icon>
             <v-icon>mdi-chat</v-icon>

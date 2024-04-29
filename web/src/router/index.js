@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import SupportChat from '@/views/project/SupportChat.vue';
+import HelpDesk from '@/views/project/HelpDesk.vue';
 import Install from '../views/project/Install.vue';
 import History from '../views/project/History.vue';
 import Activity from '../views/project/Activity.vue';
@@ -90,8 +90,9 @@ const routes = [
     component: Inventory,
   },
   {
-    path: '/project/:projectId/support',
-    component: SupportChat,
+    path: '/project/:projectId/helpdesk/:pathMatch(.*)*',
+    component: HelpDesk,
+    props: true,
   },
   {
     path: '/project/:projectId/integrations',
