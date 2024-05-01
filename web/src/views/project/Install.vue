@@ -278,18 +278,22 @@ export default {
       detailsVersion: {},
 
       versions: [{
+        semver: '2.9.75',
+        id: '2cc7896f-4d0f-4921-994c-e330d012605e',
+        date: 'April 29, 2024',
+        description: 'Fixed SSH using wrong username.',
+      }, {
         semver: '2.9.73',
         id: '594d728f-5f07-4314-8f8e-23feb4ad4dfb',
-        latest: true,
         date: 'April 27, 2024',
-        description: 'Terraform support bugfixes',
-      }, {
-        semver: '2.9.72',
-        id: '863ba8c7-f4ea-4921-8883-8af1ca254a6c',
-        date: 'April 24, 2024',
-      }, {
-        semver: '2.9.63',
-        id: '07238e2b-6cc1-422d-b1f9-0deb45cf4d93',
+        description: 'Terraform support bugfixes.',
+      // }, {
+      //   semver: '2.9.72',
+      //   id: '863ba8c7-f4ea-4921-8883-8af1ca254a6c',
+      //   date: 'April 24, 2024',
+      // }, {
+      //   semver: '2.9.63',
+      //   id: '07238e2b-6cc1-422d-b1f9-0deb45cf4d93',
       }],
       assets: [{
         platform: 'linux',
