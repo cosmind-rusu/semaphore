@@ -278,6 +278,11 @@ export default {
       detailsVersion: {},
 
       versions: [{
+        semver: '2.9.76',
+        id: '18b71336-157b-481c-9828-0433a3e8a48b',
+        date: 'May 4, 2024',
+        description: 'Fixed activation process.',
+      }, {
         semver: '2.9.75',
         id: '2cc7896f-4d0f-4921-994c-e330d012605e',
         date: 'April 29, 2024',
