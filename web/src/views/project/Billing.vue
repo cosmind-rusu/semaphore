@@ -359,22 +359,6 @@
                 dense
                 style="margin-left: -30px;"
               >
-<!--                <v-timeline-item-->
-<!--                  icon="mdi-server"-->
-<!--                  fill-dot-->
-<!--                  class="text-subtitle-1 align-center"-->
-<!--                >-->
-<!--                  {{ plan.servers }} instance(s)-->
-<!--                </v-timeline-item>-->
-
-<!--                <v-timeline-item-->
-<!--                  fill-dot-->
-<!--                  icon="mdi-cog"-->
-<!--                  class="text-subtitle-1 align-center"-->
-<!--                >-->
-<!--                  <div>{{ plan.runners }} runners</div>-->
-<!--                </v-timeline-item>-->
-
                 <v-timeline-item
                   fill-dot
                   icon="mdi-account-multiple"
@@ -445,6 +429,8 @@ const PLANS = {
     users: 1000000,
   },
 };
+
+const FREE_TRIAL_PLANS = ['home', 'premium'];
 
 export default {
   components: { YesNoDialog },
@@ -601,7 +587,9 @@ export default {
 
     getActivePremiumButtonTitle(planId) {
       if (this.project.plan === 'free') {
-        return 'Activate';
+        return this.project.freeTrialAvailable && FREE_TRIAL_PLANS.includes(planId)
+          ? 'Try free trial'
+          : 'Activate';
       }
 
       if (this.project.plan === planId) {
@@ -642,9 +630,11 @@ export default {
     async selectPlan(plan) {
       await this.refreshProject();
 
+      const freeTrial = this.project.freeTrialAvailable && FREE_TRIAL_PLANS.includes(plan);
+
       const { price } = PLANS[plan];
 
-      if (this.project.balance < price) {
+      if (!freeTrial && this.project.balance < price) {
         this.paymentDialog = true;
       } else {
         await axios({
