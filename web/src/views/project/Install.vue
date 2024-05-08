@@ -278,6 +278,11 @@ export default {
       detailsVersion: {},
 
       versions: [{
+        semver: '2.9.80',
+        id: '6757e9f8-19a6-412e-a60c-2a9d7a69b052',
+        date: 'May 8, 2024',
+        description: 'Fixed Bash and Terraform in Docker image.',
+      }, {
         semver: '2.9.76',
         id: '18b71336-157b-481c-9828-0433a3e8a48b',
         date: 'May 4, 2024',
