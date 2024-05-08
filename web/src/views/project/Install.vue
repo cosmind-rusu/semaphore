@@ -43,7 +43,8 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
-        <v-card-text class="text-xs-center pb-0">
+
+        <v-card-text class="text-xs-center">
           <pre>{{ dockerCommand }}</pre>
         </v-card-text>
 
@@ -368,7 +369,7 @@ export default {
     -e SEMAPHORE_ADMIN_PASSWORD=changeme \\
     -e SEMAPHORE_ADMIN_NAME=Admin \\
     -e SEMAPHORE_ADMIN_EMAIL=admin@localhost \\
-    -d semaphoreui/semaphore:v{{ dockerGuideVersion.semver }}-premium`;
+    -d semaphoreui/semaphore:v${this.dockerGuideVersion.semver}-premium`;
     },
   },
 
