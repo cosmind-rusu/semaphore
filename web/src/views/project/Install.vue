@@ -44,15 +44,7 @@
           </v-btn>
         </v-card-title>
         <v-card-text class="text-xs-center pb-0">
-          <pre>
-docker run -p 3000:3000 --name semaphore \
-    -e SEMAPHORE_DB_DIALECT=bolt \
-    -e SEMAPHORE_ADMIN=admin \
-    -e SEMAPHORE_ADMIN_PASSWORD=changeme \
-    -e SEMAPHORE_ADMIN_NAME=Admin \
-    -e SEMAPHORE_ADMIN_EMAIL=admin@localhost \
-    -d semaphoreui/semaphore:v{{ dockerGuideVersion.semver }}-premium
-          </pre>
+          <pre>{{ dockerCommand }}</pre>
         </v-card-text>
 
         <v-btn
@@ -365,6 +357,18 @@ export default {
   watch: {
     projectId() {
       this.refreshProject();
+    },
+  },
+
+  computed: {
+    dockerCommand() {
+      return `docker run -p 3000:3000 --name semaphore \\
+    -e SEMAPHORE_DB_DIALECT=bolt \\
+    -e SEMAPHORE_ADMIN=admin \\
+    -e SEMAPHORE_ADMIN_PASSWORD=changeme \\
+    -e SEMAPHORE_ADMIN_NAME=Admin \\
+    -e SEMAPHORE_ADMIN_EMAIL=admin@localhost \\
+    -d semaphoreui/semaphore:v{{ dockerGuideVersion.semver }}-premium`;
     },
   },
 
