@@ -54,6 +54,15 @@ docker run -p 3000:3000 --name semaphore \
     -d semaphoreui/semaphore:v{{ dockerGuideVersion.semver }}-premium
           </pre>
         </v-card-text>
+
+        <v-btn
+            v-if="project.licenseKey"
+            class="ml-2"
+            icon
+            @click="copyToClipboard(project.licenseKey)"
+        >
+          <v-icon>mdi-content-copy</v-icon>
+        </v-btn>
       </v-card>
     </v-dialog>
 
@@ -364,6 +373,22 @@ export default {
   },
 
   methods: {
+
+    async copyToClipboard(text) {
+      try {
+        await window.navigator.clipboard.writeText(text);
+        EventBus.$emit('i-snackbar', {
+          color: 'success',
+          text: 'The command has been copied to the clipboard.',
+        });
+      } catch (e) {
+        EventBus.$emit('i-snackbar', {
+          color: 'error',
+          text: `Can't copy the command: ${e.message}`,
+        });
+      }
+    },
+
     showDetails(version) {
       this.detailsVersion = version;
       this.detailsDialog = true;
