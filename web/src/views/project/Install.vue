@@ -57,9 +57,9 @@ docker run -p 3000:3000 --name semaphore \
 
         <v-btn
             v-if="project.licenseKey"
-            class="ml-2"
+            style="position: absolute; right: 20px; bottom: 20px;"
             icon
-            @click="copyToClipboard(project.licenseKey)"
+            @click="copyToClipboard(dockerCommand)"
         >
           <v-icon>mdi-content-copy</v-icon>
         </v-btn>
