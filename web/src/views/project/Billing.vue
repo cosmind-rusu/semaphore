@@ -102,6 +102,7 @@
       max-width="400"
       persistent
       :transition="false"
+      scrollable
     >
       <v-card>
         <v-card-title>
@@ -115,23 +116,44 @@
           </v-btn>
         </v-card-title>
 
-        <v-card-text class="text-xs-center">
+        <v-divider></v-divider>
+
+        <v-card-text class="text-xs-center pt-3" style="max-height: 1000px;">
           <p class="mb-2">
-            1. Log in as an administrator to your Semaphore dashboard and click the yellow
-            button labeled <b>Activate Premium Subscription</b>:
+            1. Download and install <b>Semaphore Premium</b>.
+          </p>
+          <v-btn
+            color="primary"
+            class="mb-4"
+            :to="`/project/${projectId}/install`"
+          >Download and Install</v-btn>
+
+          <p class="mb-2">
+            2. Log in as an administrator to the Semaphore UI and click the yellow
+            button labeled <b>Activate Premium Subscription</b>.
           </p>
           <v-img class="rounded mb-6" :aspect-ratio="489/351"
                  src="activation_guide/screen1.webp"></v-img>
 
           <p class="mb-2">
-            2. Enter your subscription key, <code>{{ (project || {}).licenseKey }}</code>,
+            3. Enter your subscription key
+            <code>{{ (project || {}).licenseKey }} <v-btn
+              v-if="project.licenseKey"
+              class="ml-1"
+              icon
+              x-small
+              @click="copyToClipboard(project.licenseKey)"
+            >
+              <v-icon>mdi-content-copy</v-icon>
+            </v-btn>
+            </code>
             in the dialog box that appears and click the <b>Activate</b> button.
           </p>
           <v-img class="rounded mb-6" :aspect-ratio="428/277"
                  src="activation_guide/screen2.webp"></v-img>
 
           <p class="mb-2">
-            3. After successful activation, your subscription details will be displayed.
+            4. After successful activation, your subscription details will be displayed.
           </p>
           <v-img class="rounded" :aspect-ratio="428/408"
                  src="activation_guide/screen3.webp"></v-img>
