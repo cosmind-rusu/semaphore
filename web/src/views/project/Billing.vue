@@ -253,7 +253,7 @@
             >Download
             </v-btn>
 
-            <a class="ml-4" @click="activationGuideDialog = true">How to use activate it?</a>
+            <a class="ml-4" @click="activationGuideDialog = true">How to activate it?</a>
           </v-timeline-item>
 
           <v-timeline-item
