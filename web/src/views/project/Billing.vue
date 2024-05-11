@@ -133,7 +133,7 @@
             button labeled <b>Activate Premium Subscription</b>.
           </p>
           <v-img class="rounded mb-6" :aspect-ratio="489/351"
-                 src="activation_guide/screen1.webp"></v-img>
+                 src="activation_guide/screen1.webp?v=2"></v-img>
 
           <p class="mb-2">
             3. Enter your subscription key
