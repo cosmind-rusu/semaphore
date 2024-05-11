@@ -233,7 +233,11 @@
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
 
-            <a class="ml-4" @click="activationGuideDialog = true">How to use it?</a>
+            <a
+              v-if="project.licenseKey"
+              class="ml-4"
+              @click="activationGuideDialog = true"
+            >How to use it?</a>
 
           </v-timeline-item>
 
