@@ -107,7 +107,7 @@
         v-if="projectType === 'premium'"
         key="install"
         :to="`/project/${projectId}/install`"
-      >Setup
+      >Download
       </v-tab>
 
       <v-tab
@@ -150,67 +150,81 @@
         </div>
       </div>
 
-      <v-row>
-        <v-col md="8" lg="8">
-          <v-timeline
-            align-top
-            dense
-            style="margin-left: -20px;"
+      <div>
+        <v-timeline
+          align-top
+          dense
+          style="margin-left: -20px;"
+        >
+          <v-timeline-item
+            fill-dot
+            icon="mdi-calendar-range"
+            class="text-subtitle-1 align-center"
           >
-            <v-timeline-item
-              fill-dot
-              icon="mdi-calendar-range"
-              class="text-subtitle-1 align-center"
-            >
-              Billing date:
-              <span v-if="project.planCanceled">&mdash;</span>
-              <span v-else>{{ project.planFinishDate | formatDate2 }}</span>
-            </v-timeline-item>
+            Billing date:
+            <span v-if="project.planCanceled">&mdash;</span>
+            <span v-else>{{ project.planFinishDate | formatDate2 }}</span>
+          </v-timeline-item>
 
-            <v-timeline-item
-              v-if="projectType === 'premium'"
-              fill-dot
-              icon="mdi-license"
-              class="text-subtitle-1 align-center"
+          <v-timeline-item
+            v-if="projectType === 'premium'"
+            fill-dot
+            icon="mdi-license"
+            class="text-subtitle-1 align-center"
+          >
+            Subscription Key: <code>{{ project.licenseKey || '&mdash;' }}</code>
+            <v-btn
+              v-if="project.licenseKey"
+              class="ml-2"
+              icon
+              @click="copyToClipboard(project.licenseKey)"
             >
-              Subscription Key: <code>{{ project.licenseKey || '&mdash;' }}</code>
-              <v-btn
-                v-if="project.licenseKey"
-                class="ml-2"
-                icon
-                @click="copyToClipboard(project.licenseKey)"
-              >
-                <v-icon>mdi-content-copy</v-icon>
-              </v-btn>
-              <v-btn
-                v-if="project.licenseKey"
-                class="ml-2"
-                icon
-                @click="regenerateKeyDialog = true"
-              >
-                <v-icon>mdi-refresh</v-icon>
-              </v-btn>
-            </v-timeline-item>
+              <v-icon>mdi-content-copy</v-icon>
+            </v-btn>
 
-            <v-timeline-item
-              v-if="projectType === ''"
-              fill-dot
-              icon="mdi-server"
-              class="text-subtitle-1 align-center"
-            >Cache: {{ project.diskUsage }} / {{ plan.diskUsage }} Mb used
-            </v-timeline-item>
-            <v-timeline-item
-              v-if="projectType === ''"
-              fill-dot
-              icon="mdi-cog"
-              class="text-subtitle-1 align-center"
-            >Runner:
-              {{ Math.ceil(project.runnerUsage / 60) }} / {{ Math.ceil(plan.runnerUsage / 60) }}
-              minutes used
-            </v-timeline-item>
-          </v-timeline>
-        </v-col>
-      </v-row>
+            <v-btn
+              v-if="project.licenseKey"
+              class="ml-2"
+              icon
+              @click="regenerateKeyDialog = true"
+            >
+              <v-icon>mdi-refresh</v-icon>
+            </v-btn>
+
+            <a class="ml-4">How to use it?</a>
+
+          </v-timeline-item>
+
+          <v-timeline-item
+            v-if="projectType === 'premium' && isPremiumActive"
+            fill-dot
+            icon="mdi-download"
+            class="text-subtitle-1 align-center"
+          >
+            <v-btn
+              color="primary"
+              :to="`/project/${projectId}/install`"
+            >Download</v-btn>
+          </v-timeline-item>
+
+          <v-timeline-item
+            v-if="projectType === ''"
+            fill-dot
+            icon="mdi-server"
+            class="text-subtitle-1 align-center"
+          >Cache: {{ project.diskUsage }} / {{ plan.diskUsage }} Mb used
+          </v-timeline-item>
+          <v-timeline-item
+            v-if="projectType === ''"
+            fill-dot
+            icon="mdi-cog"
+            class="text-subtitle-1 align-center"
+          >Runner:
+            {{ Math.ceil(project.runnerUsage / 60) }} / {{ Math.ceil(plan.runnerUsage / 60) }}
+            minutes used
+          </v-timeline-item>
+        </v-timeline>
+      </div>
 
       <v-row class="mt-0 mb-9" v-if="projectType === ''">
         <v-col md="4" lg="4">
@@ -448,6 +462,9 @@ export default {
       paymentProgressTimer: null,
       currencyAmount: null,
       plan: PLANS.free,
+      /**
+       * @array
+       */
       premiumPlans: ['premium', 'premium_plus'].map((plan) => ({
         ...PLANS[plan],
         id: plan,
@@ -457,6 +474,12 @@ export default {
       paypalButtonRendering: true,
       regenerateKeyDialog: null,
     };
+  },
+
+  computed: {
+    isPremiumActive() {
+      return this.premiumPlans.findIndex((p) => p.id === this.project.plan) >= 0;
+    },
   },
 
   watch: {

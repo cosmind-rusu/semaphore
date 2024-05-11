@@ -27,17 +27,17 @@
     </v-dialog>
 
     <v-dialog
-      v-model="dockerGuideDialog"
+      v-model="installationGuideDialog"
       max-width="800"
       persistent
       :transition="false"
     >
       <v-card>
         <v-card-title>
-          Docker usage
+          Installation
           <v-spacer></v-spacer>
           <v-btn
-            @click="dockerGuideDialog = false"
+            @click="installationGuideDialog = false"
             icon
           >
             <v-icon>mdi-close</v-icon>
@@ -45,14 +45,14 @@
         </v-card-title>
 
         <v-card-text class="text-xs-center">
-          <pre>{{ dockerCommand }}</pre>
+          <pre style="white-space: pre-wrap">{{ installationCommand }}</pre>
         </v-card-text>
 
         <v-btn
-            v-if="project.licenseKey"
-            style="position: absolute; right: 20px; bottom: 20px;"
-            icon
-            @click="copyToClipboard(dockerCommand)"
+          v-if="project.licenseKey"
+          style="position: absolute; right: 20px; bottom: 20px;"
+          icon
+          @click="copyToClipboard(installationCommand)"
         >
           <v-icon>mdi-content-copy</v-icon>
         </v-btn>
@@ -69,7 +69,7 @@
         v-if="projectType === 'premium'"
         key="install"
         :to="`/project/${projectId}/install`"
-      >Setup
+      >Download
       </v-tab>
 
       <v-tab
@@ -178,15 +178,15 @@
                   </td>
                   <td>
                     <v-btn
-                      v-if="asset.platform === 'docker'"
+                      class="mr-3"
                       style="text-decoration: none !important;"
                       color="primary"
-                      @click="showDockerGuide(asset, version)"
+                      @click="showInstallationGuide(asset, version)"
                     >
                       Install
                     </v-btn>
                     <v-btn
-                      v-else
+                      v-if="asset.platform !== 'docker'"
                       style="text-decoration: none !important;"
                       color="primary"
                       :href="getAssetUrl(asset, version)"
@@ -233,30 +233,63 @@ const PLATFORM_ICONS = {
   },
 };
 
+function getInstallationFileName(assets, version) {
+  return `semaphore_${version.semver}-premium_${assets.platform}_${assets.architecture[0]}.${assets.extension}`;
+}
+
+function getInstallationFileURL(assets, version) {
+  return `https://www.semui.co/uploads/v${version.semver}-premium/${version.id}/${getInstallationFileName(assets, version)}`;
+}
+
 const EXTENSION_ICONS = {
   deb: {
     icon: 'debian',
     color: 'blue',
+    guide(assets, version) {
+      return `wget ${getInstallationFileURL(assets, version)}
+
+sudo dpkg -i ${getInstallationFileName(assets, version)}`;
+    },
   },
   rpm: {
     icon: 'centos',
     color: 'red',
+    guide(assets, version) {
+      return `wget ${getInstallationFileURL(assets, version)}
+
+sudo yum install ${getInstallationFileName(assets, version)}`;
+    },
   },
   zip: {
     icon: 'folder-zip',
     color: 'orange',
+    guide(assets, version) {
+      return `Invoke-WebRequest -Uri ("${getInstallationFileURL(assets, version)}") -OutFile semaphore.zip
+
+Expand-Archive -Path semaphore.zip  -DestinationPath ./
+
+./semaphore setup
+./semaphore server --config=./config.json`;
+    },
   },
   'tar.gz': {
     icon: 'archive',
     color: 'gray',
-  },
-  snap: {
-    icon: 'docker',
-    color: 'blue',
+    guide(assets, version) {
+      return `wget ${getInstallationFileURL(assets, version)}
+
+tar xf ${getInstallationFileName(assets, version)}
+
+./semaphore setup
+./semaphore server --config=./config.json`;
+    },
   },
   '': {
     icon: '',
     color: '',
+    guide() {
+      return '';
+    },
   },
 };
 
@@ -273,8 +306,9 @@ export default {
       EXTENSION_ICONS,
       project: null,
       deleteProjectDialog: null,
-      dockerGuideDialog: null,
-      dockerGuideVersion: {},
+      installationGuideDialog: null,
+      installationGuideVersion: {},
+      installationGuideAsset: {},
 
       detailsDialog: null,
       detailsVersion: {},
@@ -299,13 +333,6 @@ export default {
         id: '594d728f-5f07-4314-8f8e-23feb4ad4dfb',
         date: 'April 27, 2024',
         description: 'Terraform support bugfixes.',
-      // }, {
-      //   semver: '2.9.72',
-      //   id: '863ba8c7-f4ea-4921-8883-8af1ca254a6c',
-      //   date: 'April 24, 2024',
-      // }, {
-      //   semver: '2.9.63',
-      //   id: '07238e2b-6cc1-422d-b1f9-0deb45cf4d93',
       }],
       assets: [{
         platform: 'linux',
@@ -362,14 +389,28 @@ export default {
   },
 
   computed: {
-    dockerCommand() {
-      return `docker run -p 3000:3000 --name semaphore \\
+    installationCommand() {
+      if (!this.installationGuideAsset.platform) {
+        return '';
+      }
+
+      if (this.installationGuideAsset.platform === 'docker') {
+        return `docker run -p 3000:3000 --name semaphore \\
     -e SEMAPHORE_DB_DIALECT=bolt \\
     -e SEMAPHORE_ADMIN=admin \\
     -e SEMAPHORE_ADMIN_PASSWORD=changeme \\
     -e SEMAPHORE_ADMIN_NAME=Admin \\
     -e SEMAPHORE_ADMIN_EMAIL=admin@localhost \\
-    -d semaphoreui/semaphore:v${this.dockerGuideVersion.semver}-premium`;
+    -d semaphoreui/semaphore:v${this.installationGuideVersion.semver}-premium`;
+      }
+
+      if (!this.installationGuideAsset.extension) {
+        return '';
+      }
+
+      const extInfo = EXTENSION_ICONS[this.installationGuideAsset.extension];
+
+      return extInfo.guide(this.installationGuideAsset, this.installationGuideVersion);
     },
   },
 
@@ -403,9 +444,10 @@ export default {
       event.stopPropagation();
     },
 
-    showDockerGuide(asset, version) {
-      this.dockerGuideDialog = true;
-      this.dockerGuideVersion = version;
+    showInstallationGuide(asset, version) {
+      this.installationGuideDialog = true;
+      this.installationGuideVersion = version;
+      this.installationGuideAsset = asset;
     },
 
     getAssetUrl(asset, version) {

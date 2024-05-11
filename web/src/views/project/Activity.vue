@@ -10,7 +10,7 @@
         v-if="projectType === 'premium'"
         key="install"
         :to="`/project/${projectId}/install`"
-      >Setup
+      >Download
       </v-tab>
 
       <v-tab
