@@ -97,6 +97,45 @@
       @yes="regenerateKey()"
     />
 
+    <v-dialog
+      v-model="activationGuideDialog"
+      max-width="400"
+      persistent
+      :transition="false"
+    >
+      <v-card>
+        <v-card-title>
+          How to activate subscription?
+          <v-spacer></v-spacer>
+          <v-btn
+            @click="activationGuideDialog = false"
+            icon
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+
+        <v-card-text class="text-xs-center">
+          <p class="mb-2">
+            1. Login as administrator to your Semaphore dashboard and click yellow button
+            <b>Activate Premium Subscription</b>:
+          </p>
+          <v-img class="rounded mb-6" src="activation_guide/screen1.webp"></v-img>
+
+          <p class="mb-2">
+            2. Enter your subscription key <code>{{ (project || {}).licenseKey }}</code>
+            in the opened dialog and click <b>Activate</b> button:
+          </p>
+          <v-img class="rounded mb-6" src="activation_guide/screen2.webp"></v-img>
+
+          <p class="mb-2">
+            3. After successful activation you will see your subscription details:
+          </p>
+          <v-img class="rounded" src="activation_guide/screen3.webp"></v-img>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
     <v-toolbar flat>
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
       <v-toolbar-title>{{ $t('dashboard') }}</v-toolbar-title>
@@ -191,7 +230,7 @@
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
 
-            <a class="ml-4">How to use it?</a>
+            <a class="ml-4" @click="activationGuideDialog = true">How to use it?</a>
 
           </v-timeline-item>
 
@@ -204,7 +243,10 @@
             <v-btn
               color="primary"
               :to="`/project/${projectId}/install`"
-            >Download</v-btn>
+            >Download
+            </v-btn>
+
+            <a class="ml-4" @click="activationGuideDialog = true">How to use activate it?</a>
           </v-timeline-item>
 
           <v-timeline-item
@@ -473,6 +515,7 @@ export default {
       paypalButton: null,
       paypalButtonRendering: true,
       regenerateKeyDialog: null,
+      activationGuideDialog: null,
     };
   },
 
@@ -507,8 +550,7 @@ export default {
         method: 'post',
         url: `/billing/projects/${this.projectId}/subscription/rekey`,
         responseType: 'json',
-        data: {
-        },
+        data: {},
       }));
 
       this.project.licenseKey = data.key;
