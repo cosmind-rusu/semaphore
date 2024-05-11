@@ -117,21 +117,24 @@
 
         <v-card-text class="text-xs-center">
           <p class="mb-2">
-            1. Login as administrator to your Semaphore dashboard and click yellow button
-            <b>Activate Premium Subscription</b>:
+            1. Log in as an administrator to your Semaphore dashboard and click the yellow
+            button labeled <b>Activate Premium Subscription</b>:
           </p>
-          <v-img class="rounded mb-6" src="activation_guide/screen1.webp"></v-img>
+          <v-img class="rounded mb-6" :aspect-ratio="489/351"
+                 src="activation_guide/screen1.webp"></v-img>
 
           <p class="mb-2">
-            2. Enter your subscription key <code>{{ (project || {}).licenseKey }}</code>
-            in the opened dialog and click <b>Activate</b> button:
+            2. Enter your subscription key, <code>{{ (project || {}).licenseKey }}</code>,
+            in the dialog box that appears and click the <b>Activate</b> button.
           </p>
-          <v-img class="rounded mb-6" src="activation_guide/screen2.webp"></v-img>
+          <v-img class="rounded mb-6" :aspect-ratio="428/277"
+                 src="activation_guide/screen2.webp"></v-img>
 
           <p class="mb-2">
-            3. After successful activation you will see your subscription details:
+            3. After successful activation, your subscription details will be displayed.
           </p>
-          <v-img class="rounded" src="activation_guide/screen3.webp"></v-img>
+          <v-img class="rounded" :aspect-ratio="428/408"
+                 src="activation_guide/screen3.webp"></v-img>
         </v-card-text>
       </v-card>
     </v-dialog>
