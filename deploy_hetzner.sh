@@ -1,6 +1,7 @@
-task compile
+export GOOS=linux
+export GOARCH=amd64
 
-GOOS=linux GOARCH=amd64 task build:local
+task build
 
 scp ./bin/semaphore hetzner:~/
 

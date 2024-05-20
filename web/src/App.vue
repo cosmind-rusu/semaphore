@@ -771,13 +771,13 @@ const LANGUAGES = {
     flag: '🇩🇪',
     title: 'German',
   },
-  zh_hans: {
+  zh_cn: {
     flag: '🇨🇳',
-    title: '简体中文',
+    title: '中文(大陆)',
   },
-  zh_hant: {
+  zh_tw: {
     flag: '🇹🇼',
-    title: '繁體中文',
+    title: '中文(台灣)',
   },
   fr: {
     flag: '🇫🇷',
@@ -804,6 +804,11 @@ const LANGUAGES = {
 function getLangInfo(locale) {
   let res = LANGUAGES[locale];
 
+  // failback short i18n
+  if (!res) {
+    res = LANGUAGES[locale.split('_')[0]];
+  }
+
   if (!res) {
     res = LANGUAGES.en;
   }
@@ -812,7 +817,7 @@ function getLangInfo(locale) {
 }
 
 function getSystemLang() {
-  const locale = navigator.language.split('-')[0];
+  const locale = navigator.language.replace('-', '_').toLocaleLowerCase();
 
   return getLangInfo(locale || 'en');
 }
@@ -1092,11 +1097,13 @@ export default {
   },
 
   methods: {
-    onSubscriptionKeyUpdates() {
+    async onSubscriptionKeyUpdates() {
       EventBus.$emit('i-snackbar', {
         color: 'success',
         text: 'Subscription activated',
       });
+
+      await this.loadUserInfo();
     },
 
     showNewProjectDialogue(projectType = '') {
