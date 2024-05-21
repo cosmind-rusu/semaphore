@@ -3,6 +3,7 @@ package tasks
 import (
 	"encoding/json"
 	"fmt"
+	"maps"
 	"os"
 	"strconv"
 
@@ -19,6 +20,7 @@ type LocalJob struct {
 	Inventory   db.Inventory
 	Repository  db.Repository
 	Environment db.Environment
+	Secret      string
 	Logger      task_logger.Logger
 
 	App db_lib.LocalApp
@@ -90,6 +92,7 @@ func (t *LocalJob) getEnvironmentExtraVars(username string, incomingVersion *str
 
 func (t *LocalJob) getEnvironmentExtraVarsJSON(username string, incomingVersion *string) (str string, err error) {
 	extraVars := make(map[string]interface{})
+	extraSecretVars := make(map[string]interface{})
 
 	if t.Environment.JSON != "" {
 		err = json.Unmarshal([]byte(t.Environment.JSON), &extraVars)
@@ -97,6 +100,15 @@ func (t *LocalJob) getEnvironmentExtraVarsJSON(username string, incomingVersion 
 			return
 		}
 	}
+	if t.Secret != "" {
+		err = json.Unmarshal([]byte(t.Secret), &extraSecretVars)
+		if err != nil {
+			return
+		}
+	}
+	t.Secret = "{}"
+
+	maps.Copy(extraVars, extraSecretVars)
 
 	taskDetails := make(map[string]interface{})
 
@@ -152,7 +164,7 @@ func (t *LocalJob) getEnvironmentENV() (arr []string, err error) {
 
 // nolint: gocyclo
 func (t *LocalJob) getBashArgs(username string, incomingVersion *string) (args []string, err error) {
-	//extraVars, err := t.getEnvironmentExtraVars(username, incomingVersion)
+	extraVars, err := t.getEnvironmentExtraVars(username, incomingVersion)
 
 	args = append(args, t.Template.Playbook)
 
@@ -162,12 +174,12 @@ func (t *LocalJob) getBashArgs(username string, incomingVersion *string) (args [
 		return
 	}
 
-	//for name, value := range extraVars {
-	//	if name == "semaphore_vars" {
-	//		continue
-	//	}
-	//	args = append(args, "-var", fmt.Sprintf("%s=%s", name, value))
-	//}
+	for name, value := range extraVars {
+		if name == "semaphore_vars" {
+			continue
+		}
+		args = append(args, fmt.Sprintf("%s=%s", name, value))
+	}
 
 	return
 }

@@ -26,21 +26,15 @@ func (t *BashApp) makeCmd(command string, args []string, environmentVars *[]stri
 	cmd.Env = append(cmd.Env, fmt.Sprintf("PWD=%s", cmd.Dir))
 
 	if environmentVars != nil {
+		cmd.Env = append(cmd.Env, args...)
+	}
+
+	if environmentVars != nil {
 		cmd.Env = append(cmd.Env, *environmentVars...)
 	}
 
-	sensitiveEnvs := []string{
-		"SEMAPHORE_ACCESS_KEY_ENCRYPTION",
-		"SEMAPHORE_ADMIN_PASSWORD",
-		"SEMAPHORE_DB_USER",
-		"SEMAPHORE_DB_NAME",
-		"SEMAPHORE_DB_HOST",
-		"SEMAPHORE_DB_PASS",
-		"SEMAPHORE_LDAP_PASSWORD",
-	}
-
 	// Remove sensitive env variables from cmd process
-	for _, env := range sensitiveEnvs {
+	for _, env := range getSensitiveEnvs() {
 		cmd.Env = append(cmd.Env, env+"=")
 	}
 
