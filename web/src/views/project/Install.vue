@@ -314,6 +314,11 @@ export default {
       detailsVersion: {},
 
       versions: [{
+        semver: '2.9.98',
+        id: '5851efd4-425a-42e0-bd8f-4f8af51cc728',
+        date: 'May 21, 2024',
+        description: 'Added Enum and Secret survey variables.',
+      }, {
         semver: '2.9.83',
         id: 'e67dec00-3bef-4ded-ba90-f72e110c07b0',
         date: 'May 8, 2024',
