@@ -4,7 +4,7 @@ module.exports = {
       historyApiFallback: true,
       proxy: {
         '^/api': {
-          target: 'http://localhost:3330',
+          target: 'http://localhost:3000',
         },
         '^/billing': {
           target: 'http://localhost:2500',
