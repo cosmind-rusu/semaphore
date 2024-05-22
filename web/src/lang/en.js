@@ -160,7 +160,7 @@ export default {
   playbookFilename: 'Playbook Filename *',
   exampleSiteyml: 'Example: site.yml',
   inventory2: 'Inventory *',
-  repository: 'Repository *',
+  repository: 'Repository',
   environment3: 'Environment *',
   vaultPassword: 'Vault Password',
   vaultPassword2: 'Vault Password',
@@ -239,5 +239,5 @@ export default {
   Run: 'Run',
   CreateDemoProject: 'Create Demo Project',
   LeaveProject: 'Leave Project',
-
+  integration: 'Integration',
 };
