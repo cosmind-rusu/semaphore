@@ -314,10 +314,15 @@ export default {
       detailsVersion: {},
 
       versions: [{
-        semver: '2.9.105',
-        id: '1508c072-565d-466f-b00b-709402eb6ed6',
+        semver: '2.9.107',
+        id: '17b51e42-3e81-467b-835f-105ade00e0f4',
         date: 'May 24, 2024',
         description: 'Fixed BoltDB database path in Docker.',
+        dependencies: {
+          terraform: '1.8.2',
+          tofu: '1.7.0',
+          pulumi: '3.116.1',
+        },
       }, {
         semver: '2.9.101',
         id: 'be4b13f0-b5f4-4786-b34f-d03d5f6fff57',
