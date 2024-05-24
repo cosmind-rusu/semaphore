@@ -318,7 +318,7 @@ export default {
         id: '17b51e42-3e81-467b-835f-105ade00e0f4',
         date: 'May 24, 2024',
         description: 'Fixed BoltDB database path in Docker.',
-        dependencies: {
+        dockerAssets: {
           terraform: '1.8.2',
           tofu: '1.7.0',
           pulumi: '3.116.1',
