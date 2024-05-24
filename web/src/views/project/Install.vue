@@ -45,17 +45,89 @@
         </v-card-title>
 
         <v-card-text class="text-xs-center">
-          <pre style="white-space: pre-wrap">{{ installationCommand }}</pre>
+
+          <div>Docs:</div>
+          <div v-if="installationGuideAsset.platform === 'docker'">
+            <a
+              href="https://docs.semui.co/administration-guide/installation#docker"
+              target="_blank"
+            >Installation</a>
+          </div>
+          <div v-else-if="['deb', 'rpm'].includes(installationGuideAsset.extension)">
+            <a
+              href="https://docs.semui.co/administration-guide/installation#package-manager"
+              target="_blank"
+            >Installation</a>
+          </div>
+
+          <div v-else-if="['zip', 'tar.gz'].includes(installationGuideAsset.extension)">
+            <a
+              href="https://docs.semui.co/administration-guide/installation#binary-file"
+              target="_blank"
+              class="pr-4"
+            >Installation</a>
+
+            <a
+              href="https://docs.semui.co/administration-guide/configuration#configuration-file"
+              target="_blank"
+            >Configuration</a>
+          </div>
+
+          <div v-if="installationGuideAsset.platform === 'docker'" class="mt-5">Components:</div>
+
+          <div
+            v-if="installationGuideAsset.platform === 'docker'"
+            class="d-flex flex-row pt-2 pb-2 align-center flex-wrap"
+          >
+            <div
+              v-if="(installationGuideVersion.dockerAssets || {}).terraform"
+              class="mr-4 text-no-wrap"
+            >
+              <v-icon :color="APP_ICONS.terraform.color">mdi-terraform</v-icon>
+              Terraform: {{ installationGuideVersion.dockerAssets.terraform }}
+            </div>
+
+            <div
+              v-if="(installationGuideVersion.dockerAssets || {}).tofu"
+              class="mr-4 text-no-wrap"
+            >
+              <v-icon>$vuetify.icons.tofu</v-icon>
+              OpenTofu: {{ installationGuideVersion.dockerAssets.tofu }}
+            </div>
+
+            <div
+              v-if="(installationGuideVersion.dockerAssets || {}).pulumi"
+              class="mr-4 text-no-wrap"
+            >
+              <v-icon>$vuetify.icons.pulumi</v-icon>
+              Pulumi: {{ installationGuideVersion.dockerAssets.pulumi }}
+            </div>
+
+<!--            <v-btn color="primary">Customize</v-btn>-->
+          </div>
+
+          <div class="mt-3">Command:</div>
+
+          <div style="position: relative;">
+            <pre style="white-space: pre-wrap;
+                        background: #e5e5e5;
+                        border-radius: 10px;
+                        margin-top: 5px;"
+                 class="pa-2"
+            >{{ installationCommand }}</pre>
+
+            <v-btn
+              v-if="project.licenseKey"
+              style="position: absolute; right: 10px; top: 10px;"
+              icon
+              @click="copyToClipboard(installationCommand)"
+            >
+              <v-icon>mdi-content-copy</v-icon>
+            </v-btn>
+          </div>
+
         </v-card-text>
 
-        <v-btn
-          v-if="project.licenseKey"
-          style="position: absolute; right: 20px; bottom: 20px;"
-          icon
-          @click="copyToClipboard(installationCommand)"
-        >
-          <v-icon>mdi-content-copy</v-icon>
-        </v-btn>
       </v-card>
     </v-dialog>
 
@@ -209,6 +281,7 @@
 <script>
 import EventBus from '@/event-bus';
 import axios from 'axios';
+import { APP_ICONS } from '@/lib/constants';
 
 const PLATFORM_ICONS = {
   windows: {
@@ -304,6 +377,7 @@ export default {
     return {
       PLATFORM_ICONS,
       EXTENSION_ICONS,
+      APP_ICONS,
       project: null,
       deleteProjectDialog: null,
       installationGuideDialog: null,
@@ -322,6 +396,7 @@ export default {
           terraform: '1.8.2',
           tofu: '1.7.0',
           pulumi: '3.116.1',
+          bash: '7.0.1',
         },
       }, {
         semver: '2.9.101',
