@@ -73,32 +73,41 @@
             >Configuration</a>
           </div>
 
-          <div v-if="installationGuideAsset.platform === 'docker'" class="mt-5">Components:</div>
+          <div v-if="installationGuideAsset.platform === 'docker'
+                  && installationGuideVersion.dockerAssets" class="mt-5">Components:</div>
 
           <div
-            v-if="installationGuideAsset.platform === 'docker'"
-            class="d-flex flex-row pt-2 pb-2 align-center flex-wrap"
+            v-if="installationGuideAsset.platform === 'docker'
+                  && installationGuideVersion.dockerAssets"
+            class="d-flex flex-row pt-2 pb-2 align-center flex-wrap DockerAssets"
           >
-            <div
-              v-if="(installationGuideVersion.dockerAssets || {}).terraform"
-              class="mr-4 text-no-wrap"
-            >
+
+            <div class="mr-4 py-1 text-no-wrap">
+              <v-icon>mdi-bash</v-icon>
+              Bash: {{ installationGuideVersion.dockerAssets.bash }}
+            </div>
+
+            <div class="mr-4 py-1 text-no-wrap">
+              <v-icon>mdi-language-python</v-icon>
+              Python: {{ installationGuideVersion.dockerAssets.python }}
+            </div>
+
+            <div class="mr-4 py-1 text-no-wrap">
+              <v-icon>mdi-ansible</v-icon>
+              Ansible: {{ installationGuideVersion.dockerAssets.ansible }}
+            </div>
+
+            <div class="mr-4 py-1 text-no-wrap">
               <v-icon :color="APP_ICONS.terraform.color">mdi-terraform</v-icon>
               Terraform: {{ installationGuideVersion.dockerAssets.terraform }}
             </div>
 
-            <div
-              v-if="(installationGuideVersion.dockerAssets || {}).tofu"
-              class="mr-4 text-no-wrap"
-            >
+            <div class="mr-4 py-1 text-no-wrap">
               <v-icon>$vuetify.icons.tofu</v-icon>
               OpenTofu: {{ installationGuideVersion.dockerAssets.tofu }}
             </div>
 
-            <div
-              v-if="(installationGuideVersion.dockerAssets || {}).pulumi"
-              class="mr-4 text-no-wrap"
-            >
+            <div class="mr-4 py-1 text-no-wrap">
               <v-icon>$vuetify.icons.pulumi</v-icon>
               Pulumi: {{ installationGuideVersion.dockerAssets.pulumi }}
             </div>
@@ -110,7 +119,8 @@
 
           <div style="position: relative;">
             <pre style="white-space: pre-wrap;
-                        background: #e5e5e5;
+                        background: gray;
+                        color: white;
                         border-radius: 10px;
                         margin-top: 5px;"
                  class="pa-2"
@@ -120,6 +130,7 @@
               v-if="project.licenseKey"
               style="position: absolute; right: 10px; top: 10px;"
               icon
+              color="white"
               @click="copyToClipboard(installationCommand)"
             >
               <v-icon>mdi-content-copy</v-icon>
@@ -277,6 +288,12 @@
   </div>
 </template>
 <style lang="scss">
+.DockerAssets {
+  .v-icon {
+    transform: translateY(-2px);
+    margin-right: 2px;
+  }
+}
 </style>
 <script>
 import EventBus from '@/event-bus';
@@ -396,7 +413,9 @@ export default {
           terraform: '1.8.2',
           tofu: '1.7.0',
           pulumi: '3.116.1',
-          bash: '7.0.1',
+          bash: '5.2.21',
+          ansible: '2.16.7',
+          python: '3.11.9',
         },
       }, {
         semver: '2.9.101',
