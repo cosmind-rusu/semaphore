@@ -305,19 +305,6 @@
         </v-list-item>
 
         <v-list-item
-          key="support"
-          :to="`/project/${projectId}/helpdesk`"
-        >
-          <v-list-item-icon>
-            <v-icon>mdi-chat</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title>Service Desk</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item
           v-if="project.type === ''"
           key="inventory"
           :to="`/project/${projectId}/inventory`"
@@ -397,6 +384,19 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+
+      <v-list-item
+        key="support"
+        :to="`/project/${projectId}/helpdesk`"
+      >
+        <v-list-item-icon>
+          <v-icon>mdi-chat</v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>Service Desk</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
 
       <template v-slot:append>
         <v-list class="pa-0">
