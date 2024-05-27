@@ -53,7 +53,7 @@
 
     <v-select
       v-model="item.repository_id"
-      :label="$t('repository')"
+      :label="$t('repository') + ' (Optional)'"
       clearable
       :items="repositories"
       item-value="id"
