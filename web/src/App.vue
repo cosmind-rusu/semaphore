@@ -233,9 +233,9 @@
               <v-icon color="#FFCA28">mdi-license</v-icon>
             </v-list-item-icon>
 
-            <v-list-item-content style="font-weight: bold; color: #FFCA28;">
-              New Premium Subscription
-            </v-list-item-content>
+<!--            <v-list-item-content style="font-weight: bold; color: #FFCA28;">-->
+<!--              New Premium Subscription-->
+<!--            </v-list-item-content>-->
           </v-list-item>
         </v-list>
       </v-menu>
@@ -254,17 +254,17 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item key="new_premium_license" :to="`/project/premium`">
-          <v-list-item-icon>
-            <v-icon color="#FFCA28">mdi-license</v-icon>
-          </v-list-item-icon>
+<!--        <v-list-item key="new_premium_license" :to="`/project/premium`">-->
+<!--          <v-list-item-icon>-->
+<!--            <v-icon color="#FFCA28">mdi-license</v-icon>-->
+<!--          </v-list-item-icon>-->
 
-          <v-list-item-content>
-            <v-list-item-title>
-              New Premium Subscription
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+<!--          <v-list-item-content>-->
+<!--            <v-list-item-title>-->
+<!--              New Premium Subscription-->
+<!--            </v-list-item-title>-->
+<!--          </v-list-item-content>-->
+<!--        </v-list-item>-->
 
       </v-list>
 
