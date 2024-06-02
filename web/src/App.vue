@@ -223,20 +223,20 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-divider v-if="user.can_create_project"/>
+<!--          <v-divider v-if="user.can_create_project"/>-->
 
-          <v-list-item
-            @click="showNewProjectDialogue('premium')"
-            v-if="user.can_create_project"
-          >
-            <v-list-item-icon>
-              <v-icon color="#FFCA28">mdi-license</v-icon>
-            </v-list-item-icon>
+<!--          <v-list-item-->
+<!--            @click="showNewProjectDialogue('premium')"-->
+<!--            v-if="user.can_create_project"-->
+<!--          >-->
+<!--            <v-list-item-icon>-->
+<!--              <v-icon color="#FFCA28">mdi-license</v-icon>-->
+<!--            </v-list-item-icon>-->
 
 <!--            <v-list-item-content style="font-weight: bold; color: #FFCA28;">-->
 <!--              New Premium Subscription-->
 <!--            </v-list-item-content>-->
-          </v-list-item>
+<!--          </v-list-item>-->
         </v-list>
       </v-menu>
 
