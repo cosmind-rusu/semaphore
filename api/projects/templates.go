@@ -2,8 +2,7 @@ package projects
 
 import (
 	"fmt"
-	"github.com/ansible-semaphore/semaphore/services/subscription"
-	"github.com/ansible-semaphore/semaphore/services/tasks"
+	"github.com/ansible-semaphore/semaphore/util"
 	"net/http"
 
 	"github.com/ansible-semaphore/semaphore/api/helpers"
@@ -75,15 +74,6 @@ func AddTemplate(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 
-	switch template.App {
-	case db.TemplateBash, db.TemplateTerraform:
-		if !subscription.HasActiveSubscription(helpers.Store(r)) {
-			err = tasks.ErrInvalidSubscription
-			helpers.WriteError(w, err)
-			return
-		}
-	}
-
 	template.ProjectID = project.ID
 	newTemplate, err := helpers.Store(r).CreateTemplate(template)
 
@@ -92,6 +82,12 @@ func AddTemplate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if _, ok := util.Config.Apps[string(newTemplate.App)]; !ok {
+		helpers.WriteErrorStatus(w, "Invalid app id: "+string(newTemplate.App), http.StatusBadRequest)
+		return
+	}
+
+	// Check workspace and create it if required.
 	if newTemplate.App.IsTerraform() {
 		var inv db.Inventory
 
@@ -146,6 +142,11 @@ func UpdateTemplate(w http.ResponseWriter, r *http.Request) {
 
 	var template db.Template
 	if !helpers.Bind(w, r, &template) {
+		return
+	}
+
+	if _, ok := util.Config.Apps[string(template.App)]; !ok {
+		helpers.WriteErrorStatus(w, "Invalid app id: "+string(template.App), http.StatusBadRequest)
 		return
 	}
 

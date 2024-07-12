@@ -3,7 +3,6 @@ package tasks
 import (
 	"errors"
 	"fmt"
-	"github.com/ansible-semaphore/semaphore/services/subscription"
 	"regexp"
 	"strconv"
 	"strings"
@@ -35,9 +34,10 @@ type TaskPool struct {
 	// register channel used to put tasks to queue.
 	register chan *TaskRunner
 
+	// activeProj ???
 	activeProj map[int]map[int]*TaskRunner
 
-	// runningTasks contains tasks with status TaskRunningStatus.
+	// runningTasks contains tasks with status TaskRunningStatus. Map key is a task ID.
 	runningTasks map[int]*TaskRunner
 
 	// logger channel used to putting log records to database.
@@ -45,7 +45,6 @@ type TaskPool struct {
 
 	store db.Store
 
-	// resourceLocker TODO: add description
 	resourceLocker chan *resourceLock
 }
 
@@ -195,7 +194,10 @@ func (p *TaskPool) blocks(t *TaskRunner) bool {
 	}
 
 	for _, r := range p.activeProj[t.Task.ProjectID] {
-		if r.Template.ID == t.Task.TemplateID && !r.Task.Status.IsFinished() {
+		if r.Task.Status.IsFinished() {
+			continue
+		}
+		if r.Template.ID == t.Task.TemplateID {
 			return true
 		}
 	}
@@ -331,14 +333,6 @@ func (p *TaskPool) AddTask(taskObj db.Task, userID *int, projectID int) (newTask
 		return
 	}
 
-	switch tpl.App {
-	case db.TemplateBash, db.TemplateTerraform:
-		if !subscription.HasActiveSubscription(p.store) {
-			err = ErrInvalidSubscription
-			return
-		}
-	}
-
 	err = taskObj.ValidateNewTask(tpl)
 	if err != nil {
 		return
@@ -346,7 +340,7 @@ func (p *TaskPool) AddTask(taskObj db.Task, userID *int, projectID int) (newTask
 
 	if tpl.Type == db.TemplateBuild { // get next version for TaskRunner if it is a Build
 		var builds []db.TaskWithTpl
-		builds, err = p.store.GetTemplateTasks(tpl.ProjectID, tpl.ID, db.RetrieveQueryParams{Count: 1})
+		builds, err = p.store.GetTemplateTasks(tpl.ProjectID, []int{tpl.ID}, db.RetrieveQueryParams{Count: 1})
 		if err != nil {
 			return
 		}
@@ -358,7 +352,7 @@ func (p *TaskPool) AddTask(taskObj db.Task, userID *int, projectID int) (newTask
 		}
 	}
 
-	newTask, err = p.store.CreateTask(taskObj)
+	newTask, err = p.store.CreateTask(taskObj, util.Config.MaxTasksPerTemplate)
 	if err != nil {
 		return
 	}
@@ -394,10 +388,6 @@ func (p *TaskPool) AddTask(taskObj db.Task, userID *int, projectID int) (newTask
 			Logger:      app.SetLogger(&taskRunner),
 			App:         app,
 		}
-	}
-
-	if err != nil {
-		return
 	}
 
 	taskRunner.job = job

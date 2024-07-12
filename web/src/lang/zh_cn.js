@@ -72,7 +72,7 @@ export default {
   enterEnvJson: '添加额外的Json格式环境变量...',
   environmentAndExtraVariablesMustBeValidJsonExample: '环境变量和额外变量必须是有效的 JSON。例如：',
   dashboard2: '控制台',
-  ansibleSemaphore: 'Ansible Semaphore',
+  ansibleSemaphore: 'Semaphore UI',
   wereSorryButHtmlwebpackpluginoptionstitleDoesntWor: '抱歉，如果未启用 JavaScript，<%= htmlWebpackPlugin.options.title %> 将无法正常工作。请启用它以继续。',
   deleteInventory: '删除主机配置',
   newInventory: '新增主机配置',
@@ -238,5 +238,13 @@ export default {
   Run: '运行',
   CreateDemoProject: '创建模板项目',
   LeaveProject: '离开项目',
-
+  Schedule: '计划任务',
+  integration: '外部集成',
+  integrations: '外部集成',
+  NewIntegration: '新增集成',
+  EditIntegration: '编辑集成',
+  DeleteIntegration: '删除集成',
+  DeleteIntegrationMsg: '确定删除此集成吗？',
+  AddAlias: '新增 Alias',
+  LoadAlias: '列出已有的 Alias',
 };

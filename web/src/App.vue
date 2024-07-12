@@ -241,16 +241,13 @@
       </v-menu>
 
       <v-list class="pt-0" v-if="!project">
-
         <v-list-item key="new_project" :to="`/project/new`">
           <v-list-item-icon>
             <v-icon>mdi-plus</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>
-              {{ $t('newProject') }}
-            </v-list-item-title>
+            <v-list-item-title>{{ $t('newProject') }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -293,6 +290,20 @@
 
           <v-list-item-content>
             <v-list-item-title>{{ $t('taskTemplates') }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item
+          v-if="project.type === ''"
+          key="schedule"
+          :to="`/project/${projectId}/schedule`"
+        >
+          <v-list-item-icon>
+            <v-icon>mdi-clock-outline</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ $t('Schedule') }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -362,7 +373,7 @@
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>Integrations</v-list-item-title>
+            <v-list-item-title>{{ $t('integrations') }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -677,7 +688,7 @@
 .v-data-table-header {
 }
 
-.theme--light.v-data-table > .v-data-table__wrapper > table > thead > tr:last-child > th {
+.v-data-table > .v-data-table__wrapper > table > thead > tr:last-child > th {
   text-transform: uppercase;
   white-space: nowrap;
 }

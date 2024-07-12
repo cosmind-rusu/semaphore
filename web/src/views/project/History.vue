@@ -42,6 +42,13 @@
     >
       <template v-slot:item.tpl_alias="{ item }">
         <div class="d-flex">
+          <v-icon
+              class="mr-3"
+              small
+          >
+            {{ getAppIcon(item.tpl_app) }}
+          </v-icon>
+
           <v-icon class="mr-3" small>
             {{ TEMPLATE_TYPE_ICONS[item.tpl_type] }}
           </v-icon>
@@ -106,9 +113,10 @@ import TaskStatus from '@/components/TaskStatus.vue';
 import TaskLink from '@/components/TaskLink.vue';
 import socket from '@/socket';
 import { TEMPLATE_TYPE_ICONS } from '@/lib/constants';
+import AppsMixin from '@/components/AppsMixin';
 
 export default {
-  mixins: [ItemListPageBase],
+  mixins: [ItemListPageBase, AppsMixin],
 
   data() {
     return { TEMPLATE_TYPE_ICONS };
