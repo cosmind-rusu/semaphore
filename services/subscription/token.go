@@ -4,6 +4,7 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
+	"errors"
 	"fmt"
 	"github.com/ansible-semaphore/semaphore/db"
 	"github.com/golang-jwt/jwt/v4"
@@ -63,10 +64,16 @@ func ParseToken(tokenString string) (res Token, err error) {
 
 	// Parse and verify the token
 	token, err := jwt.Parse(tokenString, keyFunc)
-	if err != nil {
+
+	isTokenExpired := false
+
+	if errors.Is(err, jwt.ErrTokenExpired) {
+		err = nil
+		isTokenExpired = true
+	} else if err != nil {
 		return
 	}
-	if !token.Valid {
+	if !isTokenExpired && !token.Valid {
 		err = fmt.Errorf("token is not valid")
 		return
 	}
@@ -81,7 +88,12 @@ func ParseToken(tokenString string) (res Token, err error) {
 	res.Plan = claims["plan"].(string)
 	res.Key = claims["key"].(string)
 	res.Users = int(claims["users"].(float64))
-	res.State = claims["state"].(string)
+
+	if isTokenExpired {
+		res.State = "expired"
+	} else {
+		res.State = claims["state"].(string)
+	}
 
 	err = res.Validate()
 	if err != nil {

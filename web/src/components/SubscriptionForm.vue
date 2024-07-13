@@ -45,7 +45,6 @@
 </template>
 <script>
 import ItemFormBase from '@/components/ItemFormBase';
-import axios from 'axios';
 
 export default {
   mixins: [ItemFormBase],
@@ -54,15 +53,13 @@ export default {
     return {};
   },
 
-  methods: {
-    async loadData() {
-      this.item = (await axios({
-        method: 'get',
-        url: '/api/subscription',
-        responseType: 'json',
-      })).data;
+  computed: {
+    isNew() {
+      return false;
     },
+  },
 
+  methods: {
     async afterSave() {
       await this.loadData();
     },
