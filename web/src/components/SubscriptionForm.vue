@@ -28,6 +28,14 @@
       </v-list-item>
       <v-list-item class="pa-0">
         <v-list-item-content>
+          <v-list-item-title>Status</v-list-item-title>
+          <v-list-item-subtitle>
+            <v-chip :color="statusColor" label class="mt-1">{{ item.state }}</v-chip>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item class="pa-0">
+        <v-list-item-content>
           <v-list-item-title>Expires at</v-list-item-title>
           <v-list-item-subtitle>{{ item.expiresAt }}</v-list-item-subtitle>
         </v-list-item-content>
@@ -56,6 +64,17 @@ export default {
   computed: {
     isNew() {
       return false;
+    },
+
+    statusColor() {
+      switch (this.item.state) {
+        case 'expired':
+          return 'error';
+        case 'active':
+          return 'success';
+        default:
+          return '';
+      }
     },
   },
 

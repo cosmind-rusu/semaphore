@@ -97,7 +97,7 @@
     </EditDialog>
 
     <EditDialog
-      v-model="subscriptionDialogue"
+      v-model="subscriptionDialog"
       save-button-text="Activate"
       title="Premium Subscription"
       v-if="user"
@@ -386,20 +386,20 @@
             <v-list-item-title>{{ $t('team') }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
+        <v-list-item
+          key="support"
+          :to="`/project/${projectId}/helpdesk`"
+        >
+          <v-list-item-icon>
+            <v-icon>mdi-chat</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>Service Desk</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
-
-      <v-list-item
-        key="support"
-        :to="`/project/${projectId}/helpdesk`"
-      >
-        <v-list-item-icon>
-          <v-icon>mdi-chat</v-icon>
-        </v-list-item-icon>
-
-        <v-list-item-content>
-          <v-list-item-title>Service Desk</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
 
       <template v-slot:append>
         <v-list class="pa-0">
@@ -407,7 +407,7 @@
           <v-list-item
             key="premium"
             v-if="user.admin && !user.has_active_subscription"
-            @click="subscriptionDialogue = true"
+            @click="subscriptionDialog = true"
             class="ActivatePremiumSubscriptionButton"
           >
             <v-list-item-content>
@@ -510,7 +510,7 @@
               <v-list-item
                 key="subscription"
                 v-if="user.admin"
-                @click="subscriptionDialogue = true"
+                @click="subscriptionDialog = true"
               >
                 <v-list-item-icon>
                   <v-icon>mdi-license</v-icon>
@@ -855,7 +855,7 @@ export default {
       newProjectType: '',
       userDialog: null,
       passwordDialog: null,
-      subscriptionDialogue: null,
+      subscriptionDialog: null,
 
       taskLogDialog: null,
       task: null,
