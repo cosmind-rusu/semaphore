@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "serve-cloud": "vue-cli-service serve --mode cloud",
     "build": "vue-cli-service build",
+    "build-cloud": "vue-cli-service build --mode cloud",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },

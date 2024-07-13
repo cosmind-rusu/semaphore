@@ -29,6 +29,7 @@
       <v-tab key="activity" :to="`/project/${projectId}/activity`">{{ $t('activity') }}</v-tab>
       <v-tab key="settings" :to="`/project/${projectId}/settings`">{{ $t('settings') }}</v-tab>
       <v-tab
+        v-if="isCloud"
         key="billing"
         :to="`/project/${projectId}/billing`"
       >Billing
@@ -110,6 +111,12 @@ export default {
     return {
       deleteProjectDialog: null,
     };
+  },
+
+  computed: {
+    isCloud() {
+      return process.env.VUE_APP_BUILD_TYPE === 'cloud';
+    },
   },
 
   methods: {

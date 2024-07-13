@@ -62,10 +62,15 @@ const routes = [
     path: '/project/:projectId/settings',
     component: Settings,
   },
-  {
+  ...(process.env.VUE_APP_BUILD_TYPE === 'cloud' ? [{
     path: '/project/:projectId/billing',
     component: Billing,
   },
+  {
+    path: '/project/:projectId/helpdesk/:pathMatch(.*)*',
+    component: HelpDesk,
+    props: true,
+  }] : []),
   {
     path: '/project/:projectId/templates',
     component: Templates,
@@ -93,11 +98,6 @@ const routes = [
   {
     path: '/project/:projectId/inventory',
     component: Inventory,
-  },
-  {
-    path: '/project/:projectId/helpdesk/:pathMatch(.*)*',
-    component: HelpDesk,
-    props: true,
   },
   {
     path: '/project/:projectId/integrations',

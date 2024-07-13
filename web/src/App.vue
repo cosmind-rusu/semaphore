@@ -388,6 +388,7 @@
         </v-list-item>
 
         <v-list-item
+          v-if="isCloud"
           key="support"
           :to="`/project/${projectId}/helpdesk`"
         >
@@ -921,6 +922,10 @@ export default {
 
   computed: {
 
+    isCloud() {
+      return process.env.VUE_APP_BUILD_TYPE === 'cloud';
+    },
+
     lang() {
       const locale = localStorage.getItem('lang');
 
@@ -1205,12 +1210,14 @@ export default {
         return;
       }
 
-      axios({
-        method: 'get',
-        url: `/billing/projects/${projectId}`,
-        responseType: 'json',
-      }).catch(() => {
-      });
+      if (this.isCloud) {
+        axios({
+          method: 'get',
+          url: `/billing/projects/${projectId}`,
+          responseType: 'json',
+        }).catch(() => {
+        });
+      }
 
       let query = {};
 

@@ -27,7 +27,7 @@
         {{ $t('settings') }}
       </v-tab>
       <v-tab
-        v-if="userRole === 'owner'"
+        v-if="isCloud && userRole === 'owner'"
         key="billing"
         :to="`/project/${projectId}/billing`"
       >Billing</v-tab>
@@ -51,6 +51,12 @@ import ItemListPageBase from '@/components/ItemListPageBase';
 export default {
 
   mixins: [ItemListPageBase],
+
+  computed: {
+    isCloud() {
+      return process.env.VUE_APP_BUILD_TYPE === 'cloud';
+    },
+  },
 
   methods: {
     getHeaders() {
