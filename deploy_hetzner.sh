@@ -1,7 +1,7 @@
 export GOOS=linux
 export GOARCH=amd64
 
-task build
+BUILD_MODE=cloud task build
 
 scp ./bin/semaphore hetzner:~/
 
