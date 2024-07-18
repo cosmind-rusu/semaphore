@@ -20,16 +20,8 @@
       class="mb-4"
     ></v-text-field>
 
-    <v-select
-      v-model="item.password"
-      :label="$t('dockerImage')"
-      :items="images"
-      :disabled="formSaving"
-    ></v-select>
-
     <v-subheader class="px-0">
-
-      {{ $t('extraVariables') }}
+      <v-icon class="mr-1">mdi-variable</v-icon> {{ $t('extraVariables') }}
 
       <v-tooltip bottom color="black" open-delay="300" max-width="400">
         <template v-slot:activator="{ on, attrs }">
@@ -112,30 +104,19 @@
           </tr>
         </template>
       </v-data-table>
-      <div class="mt-2 mb-4 mx-1" v-if="extraVars != null">
+      <div class="mt-2 mb-4" v-if="extraVars != null">
         <v-btn
           color="primary"
           @click="addExtraVar()"
-        >New Variable</v-btn>
+        >{{ $t('New Extra Variable') }}</v-btn>
       </div>
       <v-alert color="error" v-else>Can't be displayed as table.</v-alert>
     </div>
 
     <div>
       <v-subheader class="px-0 mt-4">
+        <v-icon class="mr-1">mdi-application-settings</v-icon>
         {{ $t('environmentVariables') }}
-
-        <v-tooltip bottom color="black" open-delay="300">
-          <template v-slot:activator="{ on, attrs }">
-            <v-icon
-              class="ml-1"
-              v-bind="attrs"
-              v-on="on"
-              color="lightgray"
-            >mdi-help-circle</v-icon>
-          </template>
-          <span>Variables passed as process environment variables.</span>
-        </v-tooltip>
       </v-subheader>
       <v-data-table
         :items="env"
@@ -178,33 +159,17 @@
           </tr>
         </template>
       </v-data-table>
-      <div class="mt-2 mb-4 mx-1">
+      <div class="mt-2 mb-4">
         <v-btn
           color="primary"
           @click="addEnvVar()"
-        >New Environment Variable</v-btn>
+        >{{ $t('New Environment Variable') }}</v-btn>
       </div>
     </div>
 
     <div>
       <v-subheader class="px-0 mt-4">
-        {{ $t('Secrets') }}
-
-        <v-tooltip bottom color="black" open-delay="300" max-width="400">
-          <template v-slot:activator="{ on, attrs }">
-            <v-icon
-              class="ml-1"
-              v-bind="attrs"
-              v-on="on"
-              color="lightgray"
-            >mdi-help-circle</v-icon>
-          </template>
-          <span>
-            Secrets are stored in the database in encrypted form.
-            Secrets passed via <code>--extra-vars</code> (Ansible) or
-            <code>-var</code> (Terraform/OpenTofu).
-          </span>
-        </v-tooltip>
+        <v-icon class="mr-1">mdi-lock</v-icon>{{ $t('Secrets') }}
       </v-subheader>
 
       <v-data-table
@@ -216,6 +181,11 @@
       >
         <template v-slot:item="props">
           <tr>
+            <td class="pa-1">
+              <v-icon>
+                {{ props.item.type === 'var' ? 'mdi-variable' : 'mdi-application-settings' }}
+              </v-icon>
+            </td>
             <td class="pa-1">
               <v-text-field
                 solo-inverted
@@ -249,12 +219,40 @@
         </template>
       </v-data-table>
 
-      <div class="mt-2 mb-4 mx-1">
-        <v-btn
-          color="primary"
-          @click="addSecret()"
-        >New Secret</v-btn>
+      <div class="mt-2 mb-4">
+        <v-menu
+          offset-y
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              v-on="on"
+              color="primary"
+            >New Secret</v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              link
+              @click="addSecret('var')"
+            >
+              <v-list-item-icon>
+                <v-icon>mdi-variable</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>{{ $t('Secret Extra Variable') }}</v-list-item-title>
+            </v-list-item>
+            <v-list-item
+              link
+              @click="addSecret('env')"
+            >
+              <v-list-item-icon>
+                <v-icon>mdi-application-settings</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>{{ $t('Secret Environment Variable') }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </div>
+
     </div>
 
   </v-form>
@@ -378,8 +376,10 @@ export default {
       }
     },
 
-    addSecret(name = '', value = '') {
-      this.secrets.push({ name, value, new: true });
+    addSecret(type) {
+      this.secrets.push({
+        type, name: '', value: '', new: true,
+      });
     },
 
     removeSecret(val) {
@@ -388,7 +388,7 @@ export default {
         const s = this.secrets[i];
         this.secrets.splice(i, 1);
 
-        if (!this.secrets[i].new) {
+        if (!s.new) {
           this.secrets.push({
             ...s,
             remove: true,
@@ -456,6 +456,7 @@ export default {
           id: s.id,
           name: s.name,
           secret: s.value,
+          type: s.type,
           operation,
         };
       }).filter((s) => s.operation != null);
@@ -499,6 +500,7 @@ export default {
         id: x.id,
         name: x.name,
         value: '',
+        type: x.type,
       }));
 
       // Object.keys(env).forEach((x) => {

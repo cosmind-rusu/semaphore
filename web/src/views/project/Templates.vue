@@ -54,7 +54,6 @@
 
       <v-menu
         offset-y
-        :disabled="appsMixin.apps.length === 0"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -63,11 +62,9 @@
             color="primary"
             class="mr-1 pr-2"
             v-if="can(USER_PERMISSIONS.manageProjectResources)"
-            @click="appsMixin.activeAppIds.length > 0 || editItem('new')"
           >
             {{ $t('newTemplate') }}
-            <v-icon v-if="appsMixin.activeAppIds.length > 0">mdi-chevron-down</v-icon>
-            <span v-else class="pl-2"></span>
+            <v-icon>mdi-chevron-down</v-icon>
           </v-btn>
         </template>
         <v-list>

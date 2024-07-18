@@ -7,10 +7,8 @@ import (
 	"github.com/ansible-semaphore/semaphore/db"
 	"github.com/ansible-semaphore/semaphore/util"
 	"go.etcd.io/bbolt"
-	"math/rand"
 	"reflect"
 	"sort"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -73,24 +71,7 @@ func (d *BoltDb) Migrate() error {
 	return nil
 }
 
-func (d *BoltDb) Connect(token string) {
-	d.mu.Lock()
-	defer d.mu.Unlock()
-
-	if d.connections == nil {
-		d.connections = make(map[string]bool)
-	}
-
-	if _, exists := d.connections[token]; exists {
-		// Use for debugging
-		panic(fmt.Errorf("Connection " + token + " already exists"))
-	}
-
-	if len(d.connections) > 0 {
-		d.connections[token] = true
-		return
-	}
-
+func (d *BoltDb) openDbFile() {
 	var filename string
 	if d.Filename == "" {
 		config, err := util.Config.GetDBConfig()
@@ -110,11 +91,40 @@ func (d *BoltDb) Connect(token string) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func (d *BoltDb) openSession(token string) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	if d.connections == nil {
+		d.connections = make(map[string]bool)
+	}
+
+	if _, exists := d.connections[token]; exists {
+		// Use for debugging
+		panic(fmt.Errorf("Connection " + token + " already exists"))
+	}
+
+	if len(d.connections) > 0 {
+		d.connections[token] = true
+		return
+	}
+
+	d.openDbFile()
 
 	d.connections[token] = true
 }
 
-func (d *BoltDb) Close(token string) {
+func (d *BoltDb) Connect(token string) {
+	if d.PermanentConnection() {
+		d.openDbFile()
+	} else {
+		d.openSession(token)
+	}
+}
+
+func (d *BoltDb) closeSession(token string) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
@@ -139,8 +149,29 @@ func (d *BoltDb) Close(token string) {
 	delete(d.connections, token)
 }
 
+func (d *BoltDb) Close(token string) {
+	if d.PermanentConnection() {
+		if err := d.db.Close(); err != nil {
+			panic(err)
+		}
+	} else {
+		d.closeSession(token)
+	}
+}
+
 func (d *BoltDb) PermanentConnection() bool {
-	return false
+	config, err := util.Config.GetDBConfig()
+	if err != nil {
+		panic(err)
+	}
+
+	isSessionConnection, ok := config.Options["sessionConnection"]
+
+	if ok && (isSessionConnection == "true" || isSessionConnection == "yes") {
+		return false
+	}
+
+	return true
 }
 
 func (d *BoltDb) IsInitialized() (initialized bool, err error) {
@@ -784,8 +815,11 @@ func (d *BoltDb) isObjectInUse(bucketID int, objProps db.ObjectProps, objID obje
 }
 
 func CreateTestStore() *BoltDb {
-	r := rand.New(rand.NewSource(time.Now().UTC().UnixNano()))
-	fn := "/tmp/test_semaphore_db_" + strconv.Itoa(r.Int())
+	util.Config = &util.ConfigType{
+		Dialect: "bolt",
+	}
+
+	fn := "/tmp/test_semaphore_db_" + util.RandString(5)
 	store := BoltDb{
 		Filename: fn,
 	}
