@@ -580,6 +580,7 @@ export default {
               template_id: newItem ? newItem.id : this.itemId,
               cron_format: this.cronFormat,
               repository_id: this.cronRepositoryId,
+              active: true,
             },
           });
         }
@@ -588,7 +589,7 @@ export default {
       } else if (this.cronFormat == null || this.cronFormat === '' || !this.cronVisible) {
         // drop schedule
         await axios({
-          method: '',
+          method: 'delete',
           url: `/api/project/${this.projectId}/schedules/${this.schedules[0].id}`,
           responseType: 'json',
         });
