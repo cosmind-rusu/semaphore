@@ -20,6 +20,13 @@
       class="mb-4"
     ></v-text-field>
 
+    <v-select
+      v-model="item.password"
+      :label="$t('dockerImage')"
+      :items="images"
+      :disabled="formSaving"
+    ></v-select>
+
     <v-subheader class="px-0">
       <v-icon class="mr-1">mdi-variable</v-icon> {{ $t('extraVariables') }}
 
@@ -331,6 +338,7 @@ export default {
       // PREDEFINED_ENV_VARS,
       images: [
         'dind-runner:latest',
+        'nodejs18-runner:latest',
       ],
       advancedOptions: false,
 
