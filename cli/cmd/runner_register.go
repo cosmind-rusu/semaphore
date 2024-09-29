@@ -7,23 +7,23 @@ import (
 )
 
 func init() {
-	runnerCmd.AddCommand(runnerUnregisterCmd)
+	runnerCmd.AddCommand(runnerRegisterCmd)
 }
 
-func unregisterRunner() {
+func registerRunner() {
 	util.ConfigInit(configPath, noConfig)
 
 	taskPool := runners.JobPool{}
-	err := taskPool.Unregister()
+	err := taskPool.Register()
 	if err != nil {
 		panic(err)
 	}
 }
 
-var runnerUnregisterCmd = &cobra.Command{
-	Use:   "unregister",
-	Short: "Unregister runner from the server",
+var runnerRegisterCmd = &cobra.Command{
+	Use:   "register",
+	Short: "Register runner on the server",
 	Run: func(cmd *cobra.Command, args []string) {
-		unregisterRunner()
+		registerRunner()
 	},
 }
