@@ -338,9 +338,8 @@ export default {
       // PREDEFINED_ENV_VARS,
       images: [
         'dind-runner:v2.0.0',
+        'dind-runner:v2.0.2',
         'nodejs-runner:v2.0.0',
-        'dind-runner:latest',
-        'nodejs18-runner:latest',
       ],
       advancedOptions: false,
 
