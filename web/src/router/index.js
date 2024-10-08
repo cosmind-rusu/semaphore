@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import HelpDesk from '@/views/project/HelpDesk.vue';
-import Schedule from '@/views/project/Schedule.vue';
+import RestoreProject from '@/views/project/RestoreProject.vue';
 import Install from '../views/project/Install.vue';
+import Schedule from '../views/project/Schedule.vue';
 import History from '../views/project/History.vue';
 import Activity from '../views/project/Activity.vue';
 import Billing from '../views/project/Billing.vue';
@@ -38,6 +39,10 @@ const routes = [
     props: {
       projectType: 'premium',
     },
+  },
+  {
+    path: '/project/restore',
+    component: RestoreProject,
   },
   {
     path: '/project/:projectId',

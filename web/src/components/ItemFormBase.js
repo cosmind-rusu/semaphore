@@ -105,6 +105,10 @@ export default {
       return {};
     },
 
+    getSaveAction() {
+      return this.isNew ? 'new' : 'edit';
+    },
+
     async loadData() {
       this.formError = null;
       try {
@@ -185,7 +189,7 @@ export default {
 
         this.$emit('save', {
           item: item || this.item,
-          action: this.isNew ? 'new' : 'edit',
+          action: this.getSaveAction(),
         });
       } catch (err) {
         this.formError = getErrorMessage(err);

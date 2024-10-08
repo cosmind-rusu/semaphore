@@ -1,5 +1,35 @@
 <template>
   <v-app v-if="state === 'success'" class="app">
+
+    <YesNoDialog
+      :title="$t('projectRestoreResult')"
+      v-model="restoreProjectResultDialog"
+      hide-no-button
+      :yes-button-title="$t('close')"
+      :max-width="400"
+    >
+      <div class="pt-3" v-if="restoreProjectResult">
+
+        <v-alert
+          dense
+          outlined
+          type="success"
+        >
+          {{ $t('projectWithNameRestored', {projectName: restoreProjectResult.projectName}) }}
+        </v-alert>
+
+        <v-alert
+          dense
+          outlined
+          type="error"
+          class="mb-0"
+        >
+          <b>{{ $t('emptyKeysRestored', {emptyKeys: restoreProjectResult.emptyKeys}) }}</b>
+          {{ $t('pleaseUpdateAccessKeys') }}
+        </v-alert>
+      </div>
+    </YesNoDialog>
+
     <EditDialog
       v-model="passwordDialog"
       save-button-text="Save"
@@ -115,6 +145,23 @@
       </template>
     </EditDialog>
 
+    <EditDialog
+      v-model="restoreProjectDialog"
+      save-button-text="Restore"
+      :title="$t('restoreProject')"
+      event-name="i-project"
+    >
+      <template v-slot:form="{ onSave, onError, needSave, needReset }">
+        <RestoreProjectForm
+          item-id="new"
+          @save="onSave"
+          @error="onError"
+          :need-save="needSave"
+          :need-reset="needReset"
+        />
+      </template>
+    </EditDialog>
+
     <v-snackbar
       v-model="snackbar"
       :color="snackbarColor"
@@ -213,7 +260,7 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-item @click="restoreProject" v-if="user.can_create_project">
+          <v-list-item @click="restoreProjectDialog = true" v-if="user.can_create_project">
             <v-list-item-icon>
               <v-icon>mdi-backup-restore</v-icon>
             </v-list-item-icon>
@@ -263,6 +310,18 @@
 <!--          </v-list-item-content>-->
 <!--        </v-list-item>-->
 
+      </v-list>
+
+      <v-list class="pt-0" v-if="!project">
+        <v-list-item key="new_project" :to="`/project/restore`">
+          <v-list-item-icon>
+            <v-icon>mdi-plus</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ $t('restoreProject') }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
 
       <v-list class="pt-0" v-if="project">
@@ -767,8 +826,11 @@ import UserForm from '@/components/UserForm.vue';
 import ChangePasswordForm from '@/components/ChangePasswordForm.vue';
 import EventBus from '@/event-bus';
 import socket from '@/socket';
+
 import SubscriptionForm from '@/components/SubscriptionForm.vue';
 import PremiumLicenseProjectForm from '@/components/PremiumLicenseProjectForm.vue';
+import RestoreProjectForm from '@/components/RestoreProjectForm.vue';
+import YesNoDialog from '@/components/YesNoDialog.vue';
 
 const PROJECT_COLORS = [
   'red',
@@ -850,6 +912,8 @@ export default {
   components: {
     SubscriptionForm,
     PremiumLicenseProjectForm,
+    YesNoDialog,
+    RestoreProjectForm,
     ChangePasswordForm,
     UserForm,
     EditDialog,
@@ -872,6 +936,9 @@ export default {
       userDialog: null,
       passwordDialog: null,
       subscriptionDialog: null,
+      restoreProjectDialog: null,
+      restoreProjectResult: null,
+      restoreProjectResultDialog: null,
 
       taskLogDialog: null,
       task: null,
@@ -1097,19 +1164,36 @@ export default {
         case 'delete':
           text = `Project ${projectName} deleted`;
           break;
+        case 'restore':
+          break;
         default:
           throw new Error('Unknown project action');
       }
 
-      EventBus.$emit('i-snackbar', {
-        color: 'success',
-        text,
-      });
+      if (e.action === 'restore') {
+        const emptyKeys = (await axios({
+          method: 'get',
+          url: `/api/project/${project.id}/keys`,
+          responseType: 'json',
+        })).data.filter((k) => k.empty);
+
+        this.restoreProjectResult = {
+          projectName,
+          emptyKeys: emptyKeys.length,
+        };
+        this.restoreProjectResultDialog = true;
+      } else {
+        EventBus.$emit('i-snackbar', {
+          color: 'success',
+          text,
+        });
+      }
 
       await this.loadProjects();
 
       switch (e.action) {
         case 'new':
+        case 'restore':
           await this.selectProject(e.item.id, { new_project: undefined });
           break;
         case 'delete':
