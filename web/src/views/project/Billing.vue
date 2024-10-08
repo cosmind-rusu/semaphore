@@ -138,11 +138,11 @@
           <p class="mb-2">
             3. Enter your subscription key
             <code>{{ (project || {}).licenseKey }} <v-btn
-              v-if="project.licenseKey"
+              v-if="(project || {}).licenseKey"
               class="ml-1"
               icon
               x-small
-              @click="copyToClipboard(project.licenseKey)"
+              @click="copyToClipboard((project || {}).licenseKey)"
             >
               <v-icon>mdi-content-copy</v-icon>
             </v-btn>
