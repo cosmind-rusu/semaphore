@@ -75,7 +75,7 @@
         :items-per-page="-1"
         class="elevation-1"
         hide-default-footer
-        no-data-text="No values"
+        :no-data-text="$t('noValues')"
       >
         <template v-slot:item="props">
           <tr>
@@ -130,7 +130,7 @@
         :items-per-page="-1"
         class="elevation-1"
         hide-default-footer
-        no-data-text="No values"
+        :no-data-text="$t('noValues')"
       >
         <template v-slot:item="props">
           <tr>
@@ -184,7 +184,7 @@
         :items-per-page="-1"
         class="elevation-1"
         hide-default-footer
-        no-data-text="No values"
+        :no-data-text="$t('noValues')"
       >
         <template v-slot:item="props">
           <tr>

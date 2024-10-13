@@ -362,7 +362,7 @@
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>{{ $t('Schedule') }}</v-list-item-title>
+            <v-list-item-title>{{ $t('schedule') }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -568,20 +568,6 @@
               </v-list-item>
 
               <v-list-item
-                key="subscription"
-                v-if="user.admin"
-                @click="subscriptionDialog = true"
-              >
-                <v-list-item-icon>
-                  <v-icon>mdi-license</v-icon>
-                </v-list-item-icon>
-
-                <v-list-item-content>
-                  Premium Subscription
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item
                 key="runners"
                 to="/runners"
                 v-if="user.admin && systemInfo.use_remote_runner"
@@ -592,6 +578,34 @@
 
                 <v-list-item-content>
                   {{ $t('runners') }}
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-list-item
+                key="tasks"
+                to="/tasks"
+                v-if="user.admin"
+              >
+                <v-list-item-icon>
+                  <v-icon>mdi-check-all</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  {{ $t('activeTasks') }}
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-list-item
+                key="subscription"
+                v-if="user.admin"
+                @click="subscriptionDialog = true"
+              >
+                <v-list-item-icon>
+                  <v-icon>mdi-license</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  Premium Subscription
                 </v-list-item-content>
               </v-list-item>
 

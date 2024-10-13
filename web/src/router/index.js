@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import HelpDesk from '@/views/project/HelpDesk.vue';
 import RestoreProject from '@/views/project/RestoreProject.vue';
+import Tasks from '@/views/Tasks.vue';
 import Install from '../views/project/Install.vue';
 import Schedule from '../views/project/Schedule.vue';
 import History from '../views/project/History.vue';
@@ -136,6 +137,10 @@ const routes = [
   {
     path: '/runners',
     component: Runners,
+  },
+  {
+    path: '/tasks',
+    component: Tasks,
   },
   {
     path: '/apps',
