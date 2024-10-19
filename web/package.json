@@ -13,7 +13,7 @@
   "dependencies": {
     "@mdi/font": "^5.9.55",
     "@paypal/paypal-js": "^8.0.2",
-    "ansi-to-html": "^0.7.2",
+    "ansi_up": "^6.0.2",
     "axios": "^0.28.0",
     "core-js": "^3.23.2",
     "cron-parser": "^4.9.0",
