@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "serve-cloud": "vue-cli-service serve --mode cloud",
+    "serve-cloud": "VUE_APP_BUILD_TYPE=cloud vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build-cloud": "vue-cli-service build --mode cloud",
+    "build-cloud": "VUE_APP_BUILD_TYPE=cloud vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },

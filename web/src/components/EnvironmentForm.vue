@@ -339,7 +339,9 @@ export default {
       images: [
         'dind-runner:v2.0.0',
         'dind-runner:v2.0.2',
+        'dind-runner:v2.0.3',
         'nodejs-runner:v2.0.0',
+        'nodejs-runner:v2.0.3',
       ],
       advancedOptions: false,
 
