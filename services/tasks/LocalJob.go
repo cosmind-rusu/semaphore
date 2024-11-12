@@ -9,10 +9,10 @@ import (
 	"path"
 	"strconv"
 
-	"github.com/ansible-semaphore/semaphore/db"
-	"github.com/ansible-semaphore/semaphore/db_lib"
-	"github.com/ansible-semaphore/semaphore/pkg/task_logger"
-	"github.com/ansible-semaphore/semaphore/util"
+	"github.com/semaphoreui/semaphore/db"
+	"github.com/semaphoreui/semaphore/db_lib"
+	"github.com/semaphoreui/semaphore/pkg/task_logger"
+	"github.com/semaphoreui/semaphore/util"
 )
 
 type LocalJob struct {
@@ -340,6 +340,9 @@ func (t *LocalJob) getPlaybookArgs(username string, incomingVersion *string) (ar
 			args = append(args, fmt.Sprintf("--vault-id=%s@prompt", name))
 			inputs[fmt.Sprintf("Vault password (%s):", name)] = install.Password
 		}
+		if install.Script != "" {
+			args = append(args, fmt.Sprintf("--vault-id=%s@%s", name, install.Script))
+		}
 	}
 
 	extraVars, err := t.getEnvironmentExtraVarsJSON(username, incomingVersion)
@@ -597,10 +600,16 @@ func (t *LocalJob) installVaultKeyFiles() (err error) {
 		}
 
 		var install db.AccessKeyInstallation
-		install, err = vault.Vault.Install(db.AccessKeyRoleAnsiblePasswordVault, t.Logger)
-		if err != nil {
-			return
+		if vault.Type == db.TemplateVaultPassword {
+			install, err = vault.Vault.Install(db.AccessKeyRoleAnsiblePasswordVault, t.Logger)
+			if err != nil {
+				return
+			}
 		}
+		if vault.Type == db.TemplateVaultScript && vault.Script != nil {
+			install.Script = *vault.Script
+		}
+
 		t.vaultFileInstallations[name] = install
 	}
 

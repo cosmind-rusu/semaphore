@@ -11,12 +11,12 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/ansible-semaphore/semaphore/db"
+	"github.com/semaphoreui/semaphore/db"
 
-	"github.com/ansible-semaphore/semaphore/db_lib"
-	"github.com/ansible-semaphore/semaphore/pkg/task_logger"
-	"github.com/ansible-semaphore/semaphore/services/tasks"
-	"github.com/ansible-semaphore/semaphore/util"
+	"github.com/semaphoreui/semaphore/db_lib"
+	"github.com/semaphoreui/semaphore/pkg/task_logger"
+	"github.com/semaphoreui/semaphore/services/tasks"
+	"github.com/semaphoreui/semaphore/util"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -494,8 +494,10 @@ func (p *JobPool) checkNewJobs() {
 		if taskRunner.job.Template.Vaults != nil {
 			for _, vault := range taskRunner.job.Template.Vaults {
 				vault := vault
-				key := response.AccessKeys[vault.VaultKeyID]
-				vault.Vault = &key
+				if vault.VaultKeyID != nil {
+					key := response.AccessKeys[*vault.VaultKeyID]
+					vault.Vault = &key
+				}
 				vaults = append(vaults, vault)
 			}
 		}

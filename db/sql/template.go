@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/ansible-semaphore/semaphore/db"
+	"github.com/semaphoreui/semaphore/db"
 )
 
 func (d *SqlDb) CreateTemplate(template db.Template) (newTemplate db.Template, err error) {
@@ -233,6 +233,11 @@ func (d *SqlDb) GetTemplates(projectID int, filter db.TemplateFilter, params db.
 			err = json.Unmarshal([]byte(*tpl.SurveyVarsJSON), &tpl.SurveyVars)
 		}
 
+		if err != nil {
+			return
+		}
+
+		template.Vaults, err = d.GetTemplateVaults(projectID, template.ID)
 		if err != nil {
 			return
 		}
