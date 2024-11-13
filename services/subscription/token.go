@@ -6,8 +6,8 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"github.com/ansible-semaphore/semaphore/db"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/semaphoreui/semaphore/db"
 	"time"
 )
 
