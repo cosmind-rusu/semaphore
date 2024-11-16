@@ -120,7 +120,7 @@
 
         <v-card-text class="text-xs-center pt-3" style="max-height: 1000px;">
           <p class="mb-2">
-            1. Download and install <b>Semaphore Premium</b>.
+            1. Download and install <b>Semaphore Pro</b>.
           </p>
           <v-btn
             color="primary"
@@ -130,7 +130,7 @@
 
           <p class="mb-2">
             2. Log in as an administrator to the Semaphore UI and click the yellow
-            button labeled <b>Activate Premium Subscription</b>.
+            button labeled <b>Activate Pro Subscription</b>.
           </p>
           <v-img class="rounded mb-6" :aspect-ratio="489/351"
                  src="activation_guide/screen1.webp?v=2"></v-img>
@@ -233,7 +233,7 @@
           <v-timeline-item
             v-if="projectType === 'premium'"
             fill-dot
-            icon="mdi-license"
+            icon="mdi-professional-hexagon"
             class="text-subtitle-1 align-center"
           >
             Subscription Key: <code>{{ project.licenseKey || '&mdash;' }}</code>
@@ -509,6 +509,18 @@ const PLANS = {
     price: 40,
     users: 8,
   },
+  pro1: {
+    price: 5,
+    users: 1,
+  },
+  pro4: {
+    price: 15,
+    users: 4,
+  },
+  pro10: {
+    price: 30,
+    users: 10,
+  },
   enterprise: {
     price: 1000,
     users: 1000000,
@@ -536,7 +548,7 @@ export default {
       /**
        * @array
        */
-      premiumPlans: ['premium', 'premium_plus'].map((plan) => ({
+      premiumPlans: ['pro1', 'pro4', 'pro10'].map((plan) => ({
         ...PLANS[plan],
         id: plan,
       })),
@@ -712,11 +724,9 @@ export default {
     },
 
     async refreshProject() {
-      this.project = (await axios({
-        method: 'get',
-        url: `/billing/projects/${this.projectId}`,
-        responseType: 'json',
-      })).data;
+      this.project = {
+        plan: 'free',
+      };
 
       this.plan = PLANS[this.project.plan];
     },

@@ -101,10 +101,12 @@
     >
       <template v-slot:title="{}">
         <v-icon
-          v-if="newProjectType === 'premium'" color="#FFCA28" class="mr-2"
-        >mdi-license
+          style="margin-left: -10px;"
+          v-if="newProjectType === 'premium'" color="hsl(348deg, 86%, 61%)" class="mr-2"
+          large
+        >mdi-professional-hexagon
         </v-icon>
-        {{ newProjectType === 'premium' ? 'New Premium Subscription' : $t('newProject') }}
+        {{ newProjectType === 'premium' ? 'New Subscription' : $t('newProject') }}
       </template>
       <template v-slot:form="{ onSave, onError, needSave, needReset }">
         <PremiumLicenseProjectForm
@@ -129,11 +131,14 @@
     <EditDialog
       v-model="subscriptionDialog"
       save-button-text="Activate"
-      title="Premium Subscription"
       v-if="user"
       event-name="i-user"
       :dont-close-on-save="true"
     >
+      <template v-slot:title="{}">
+        <v-icon large class="mr-2" color="#f14668">mdi-professional-hexagon</v-icon>
+        Subscription
+      </template>
       <template v-slot:form="{ onSave, onError, needSave, needReset }">
         <SubscriptionForm
           item-id="new"
@@ -198,7 +203,10 @@
             >
               <v-list-item-icon>
 
-                <v-icon v-if="project.type === 'premium'" color="#FFCA28">mdi-license</v-icon>
+                <v-icon
+                  v-if="project.type === 'premium'"
+                  color="#FFCA28"
+                >mdi-professional-hexagon</v-icon>
 
                 <v-avatar
                   v-else
@@ -231,7 +239,10 @@
             @click="selectProject(item.id)"
           >
             <v-list-item-icon>
-              <v-icon v-if="item.type === 'premium'" color="#FFCA28">mdi-license</v-icon>
+              <v-icon
+                v-if="item.type === 'premium'"
+                color="#f14668"
+              >mdi-professional-hexagon</v-icon>
 
               <v-avatar
                 v-else
@@ -456,7 +467,7 @@
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>Service Desk</v-list-item-title>
+            <v-list-item-title>Support Center</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -471,8 +482,13 @@
             class="ActivatePremiumSubscriptionButton"
           >
             <v-list-item-content>
-              <v-list-item-title style="font-weight: bold; color: black;">
-                Activate Premium Subscription
+              <v-list-item-title style="font-weight: bold; color: white; font-size: 18px;">
+                Activate
+                <v-icon
+                  color="white"
+                  x-large
+                >mdi-professional-hexagon</v-icon>
+                Subscription
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -601,11 +617,11 @@
                 @click="subscriptionDialog = true"
               >
                 <v-list-item-icon>
-                  <v-icon>mdi-license</v-icon>
+                  <v-icon color="#f14668">mdi-professional-hexagon</v-icon>
                 </v-list-item-icon>
 
                 <v-list-item-content>
-                  Premium Subscription
+                  Subscription
                 </v-list-item-content>
               </v-list-item>
 
@@ -702,7 +718,7 @@
 <style lang="scss">
 
 .ActivatePremiumSubscriptionButton {
-  background: gold;
+  background: hsl(348deg, 86%, 61%);
   transform: rotate(-5deg) scale(0.95);
   border-radius: 6px;
   transition: 0.2s transform;
