@@ -354,6 +354,20 @@
           </v-list-item-content>
         </v-list-item>
 
+        <v-list-item
+          v-if="isCloud && project.type === 'premium'"
+          key="support"
+          :to="`/project/${projectId}/install`"
+        >
+          <v-list-item-icon>
+            <v-icon>mdi-download</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>Download and Install</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
         <v-list-item v-if="project.type === ''" key="templates" :to="templatesUrl">
           <v-list-item-icon>
             <v-icon>mdi-check-all</v-icon>

@@ -163,7 +163,10 @@
 
     <v-toolbar flat>
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
-      <v-toolbar-title>{{ $t('dashboard') }}</v-toolbar-title>
+      <v-toolbar-title>
+        {{ $t('dashboard') }}
+        <SubscriptionLabel v-if="projectType === 'premium'" />
+      </v-toolbar-title>
     </v-toolbar>
 
     <v-tabs show-arrows class="pl-4">
@@ -171,7 +174,7 @@
         v-if="projectType === 'premium'"
         key="install"
         :to="`/project/${projectId}/install`"
-      >Download
+      >News Feed
       </v-tab>
 
       <v-tab
@@ -484,6 +487,7 @@ import axios from 'axios';
 import { loadScript } from '@paypal/paypal-js';
 import { getErrorMessage } from '@/lib/error';
 import YesNoDialog from '@/components/YesNoDialog.vue';
+import SubscriptionLabel from '@/components/SubscriptionLabel.vue';
 
 const PLANS = {
   free: {
@@ -530,7 +534,7 @@ const PLANS = {
 const FREE_TRIAL_PLANS = ['home', 'premium'];
 
 export default {
-  components: { YesNoDialog },
+  components: { YesNoDialog, SubscriptionLabel },
   props: {
     projectId: Number,
     projectType: String,

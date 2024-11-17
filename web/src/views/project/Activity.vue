@@ -4,27 +4,7 @@
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
       <v-toolbar-title>
         {{ $t('dashboard') }}
-
-        <span
-          style="
-            background: #f14668;
-            color: white;
-            margin-left: 20px;
-            padding: 2px 8px 2px 6px;
-            border-radius: 6px;
-            font-size: 16px;
-            transform: translateY(-2px);
-            display: inline-block;
-            "
-        >
-          <v-icon
-            v-if="projectType === 'premium'"
-            color="white"
-            style="transform: scale(1.1) translateY(-1px)"
-          >
-            mdi-professional-hexagon
-          </v-icon> Subscription
-        </span>
+        <SubscriptionLabel v-if="projectType === 'premium'" />
       </v-toolbar-title>
     </v-toolbar>
 
@@ -33,7 +13,7 @@
         v-if="projectType === 'premium'"
         key="install"
         :to="`/project/${projectId}/install`"
-      >Download
+      >News Feed
       </v-tab>
 
       <v-tab
@@ -70,10 +50,12 @@
 </template>
 <script>
 import ItemListPageBase from '@/components/ItemListPageBase';
+import SubscriptionLabel from '@/components/SubscriptionLabel.vue';
 
 export default {
 
   mixins: [ItemListPageBase],
+  components: { SubscriptionLabel },
 
   computed: {
     isCloud() {

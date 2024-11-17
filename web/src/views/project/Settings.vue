@@ -9,7 +9,10 @@
 
     <v-toolbar flat >
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
-      <v-toolbar-title>{{ $t('dashboard') }}</v-toolbar-title>
+      <v-toolbar-title>
+        {{ $t('dashboard') }}
+        <SubscriptionLabel v-if="projectType === 'premium'" />
+      </v-toolbar-title>
     </v-toolbar>
 
     <v-tabs show-arrows class="pl-4">
@@ -17,7 +20,7 @@
         v-if="projectType === 'premium'"
         key="install"
         :to="`/project/${projectId}/install`"
-      >Download
+      >News Feed
       </v-tab>
 
       <v-tab
@@ -128,9 +131,16 @@ import axios from 'axios';
 import YesNoDialog from '@/components/YesNoDialog.vue';
 import delay from '@/lib/delay';
 import PremiumLicenseProjectForm from '@/components/PremiumLicenseProjectForm.vue';
+import SubscriptionLabel from '@/components/SubscriptionLabel.vue';
 
 export default {
-  components: { PremiumLicenseProjectForm, YesNoDialog, ProjectForm },
+  components: {
+    PremiumLicenseProjectForm,
+    YesNoDialog,
+    ProjectForm,
+    SubscriptionLabel,
+  },
+
   props: {
     projectId: Number,
     projectType: String,

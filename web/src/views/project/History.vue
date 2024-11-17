@@ -3,7 +3,8 @@
     <v-toolbar flat >
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
       <v-toolbar-title>
-        {{ $t('dashboard2') }}
+        {{ $t('dashboard') }}
+        <SubscriptionLabel v-if="projectType === 'premium'" />
       </v-toolbar-title>
     </v-toolbar>
 
@@ -12,7 +13,7 @@
         v-if="projectType === 'premium'"
         key="install"
         :to="`/project/${projectId}/install`"
-      >Download
+      >News Feed
       </v-tab>
 
       <v-tab
@@ -114,6 +115,7 @@ import TaskLink from '@/components/TaskLink.vue';
 import socket from '@/socket';
 import { TEMPLATE_TYPE_ICONS } from '@/lib/constants';
 import AppsMixin from '@/components/AppsMixin';
+import SubscriptionLabel from '@/components/SubscriptionLabel.vue';
 
 export default {
   mixins: [ItemListPageBase, AppsMixin],
@@ -122,7 +124,7 @@ export default {
     return { TEMPLATE_TYPE_ICONS };
   },
 
-  components: { TaskStatus, TaskLink },
+  components: { TaskStatus, TaskLink, SubscriptionLabel },
 
   computed: {
     isCloud() {
