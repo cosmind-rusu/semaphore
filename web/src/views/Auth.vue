@@ -94,16 +94,22 @@
           :class="{'mb-8': $route.query.new_project !== 'premium'}"
         >
           {{ $t('semaphore') }}
+          <v-icon
+            color="#f14668"
+            x-large
+            style="transform: translateY(-3px); margin-right: -40px;"
+          >
+            mdi-professional-hexagon
+          </v-icon>
         </h3>
 
-        <h4
+        <!-- <h4
           class="text-center mb-8"
           v-if="$route.query.new_project === 'premium'"
-          style="color: gold;"
+          style="font-weight: normal;"
         >
-          <v-icon color="#FFCA28">mdi-license</v-icon>
-          PREMIUM SUBSCRIPTION
-        </h4>
+          Customer Portal
+        </h4> -->
 
         <v-alert
           :value="signInError != null"
