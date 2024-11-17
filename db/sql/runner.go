@@ -11,6 +11,7 @@ func (d *SqlDb) GetRunner(projectID int, runnerID int) (runner db.Runner, err er
 }
 
 func (d *SqlDb) GetRunners(projectID int, activeOnly bool) (runners []db.Runner, err error) {
+	runners = make([]db.Runner, 0)
 	return
 }
 
