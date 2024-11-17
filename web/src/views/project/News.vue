@@ -76,7 +76,7 @@ export default {
       posts: [{
         image: 'https://opengraph.githubassets.com/144b5aed2d05ec90597b53a971560e5084a2bf58a3b79ad3c72e853e2fbc8bc7/semaphoreui/semaphore/releases/tag/v2.10.35',
         title: 'Project Runners',
-        subtitle: '1,000 miles of wonder',
+        subtitle: 'Allow to join remote runner to specified project.',
         text: "I'm a thing. But, like most politicians, he promised more than he could deliver. "
           + "You won't have time for sleeping, soldier, not with all the bed making you'll be doing. "
           + "Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! "
