@@ -1,10 +1,13 @@
+//go:build !pro
+
 package projects
 
 import (
+	"net/http"
+
 	"github.com/gorilla/context"
 	"github.com/semaphoreui/semaphore/api/helpers"
 	"github.com/semaphoreui/semaphore/db"
-	"net/http"
 )
 
 func GetRunners(w http.ResponseWriter, r *http.Request) {
@@ -15,13 +18,7 @@ func GetRunners(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	var result = make([]db.Runner, 0)
-
-	for _, runner := range runners {
-		result = append(result, runner)
-	}
-
-	helpers.WriteJSON(w, http.StatusOK, result)
+	helpers.WriteJSON(w, http.StatusOK, runners)
 }
 
 func AddRunner(w http.ResponseWriter, r *http.Request) {
