@@ -226,6 +226,16 @@ func Route() *mux.Router {
 	projectUserAPI.Path("/integrations").HandlerFunc(projects.AddIntegration).Methods("POST")
 	projectUserAPI.Path("/backup").HandlerFunc(projects.GetBackup).Methods("GET", "HEAD")
 
+	projectUserAPI.Path("/runners").HandlerFunc(projects.GetRunners).Methods("GET", "HEAD")
+	projectUserAPI.Path("/runners").HandlerFunc(projects.AddRunner).Methods("POST")
+
+	projectRunnersAPI := projectUserAPI.PathPrefix("/runners").Subrouter()
+	projectRunnersAPI.Use(globalRunnerMiddleware)
+	projectRunnersAPI.Path("/{runner_id}").HandlerFunc(projects.GetRunner).Methods("GET", "HEAD")
+	projectRunnersAPI.Path("/{runner_id}").HandlerFunc(projects.UpdateRunner).Methods("PUT", "POST")
+	projectRunnersAPI.Path("/{runner_id}/active").HandlerFunc(projects.SetRunnerActive).Methods("POST")
+	projectRunnersAPI.Path("/{runner_id}").HandlerFunc(projects.DeleteRunner).Methods("DELETE")
+
 	//
 	// Updating and deleting project
 	projectAdminAPI := authenticatedAPI.Path("/project/{project_id}").Subrouter()
@@ -479,6 +489,10 @@ func getSystemInfo(w http.ResponseWriter, r *http.Request) {
 		"ansible":           util.AnsibleVersion(),
 		"web_host":          host,
 		"use_remote_runner": util.Config.UseRemoteRunner,
+
+		"premium_features": map[string]bool{
+			"project_runners": false,
+		},
 	}
 
 	helpers.WriteJSON(w, http.StatusOK, body)

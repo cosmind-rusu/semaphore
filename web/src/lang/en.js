@@ -302,7 +302,7 @@ export default {
   taskLocation: 'Location',
   empty: 'Empty',
   noValues: 'No values',
-  addArg: 'Add Arg',
+  addArg: 'Add arg',
 
   status_success: 'Success',
   status_failed: 'Failed',

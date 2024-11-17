@@ -12,28 +12,11 @@
       <v-toolbar-title>{{ $t('dashboard') }}</v-toolbar-title>
     </v-toolbar>
 
-    <v-tabs show-arrows class="pl-4">
-      <v-tab
-        v-if="projectType === 'premium'"
-        key="install"
-        :to="`/project/${projectId}/install`"
-      >Download
-      </v-tab>
-
-      <v-tab
-        v-if="projectType === ''"
-        key="history"
-        :to="`/project/${projectId}/history`"
-      >{{ $t('history') }}</v-tab>
-      <v-tab key="activity" :to="`/project/${projectId}/activity`">{{ $t('activity') }}</v-tab>
-      <v-tab key="settings" :to="`/project/${projectId}/settings`">{{ $t('settings') }}</v-tab>
-      <v-tab
-        v-if="isCloud"
-        key="billing"
-        :to="`/project/${projectId}/billing`"
-      >Billing
-      </v-tab>
-    </v-tabs>
+    <DashboardMenu
+      :project-id="projectId"
+      project-type=""
+      :can-update-project="true"
+    />
 
     <div class="project-settings-form">
       <div style="height: 150px;" v-if="projectType === 'premium'">
@@ -128,9 +111,13 @@ import axios from 'axios';
 import YesNoDialog from '@/components/YesNoDialog.vue';
 import delay from '@/lib/delay';
 import PremiumLicenseProjectForm from '@/components/PremiumLicenseProjectForm.vue';
+import DashboardMenu from '@/components/DashboardMenu.vue';
 
 export default {
-  components: { PremiumLicenseProjectForm, YesNoDialog, ProjectForm },
+  components: {
+    PremiumLicenseProjectForm, DashboardMenu, YesNoDialog, ProjectForm,
+  },
+
   props: {
     projectId: Number,
     projectType: String,
