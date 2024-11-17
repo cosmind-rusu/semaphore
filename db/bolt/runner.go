@@ -1,10 +1,12 @@
+//go:build !pro
+
 package bolt
 
 import (
 	"encoding/base64"
 
-	"github.com/semaphoreui/semaphore/db"
 	"github.com/gorilla/securecookie"
+	"github.com/semaphoreui/semaphore/db"
 	"go.etcd.io/bbolt"
 )
 
@@ -12,7 +14,7 @@ func (d *BoltDb) GetRunner(projectID int, runnerID int) (runner db.Runner, err e
 	return
 }
 
-func (d *BoltDb) GetRunners(projectID int) (runners []db.Runner, err error) {
+func (d *BoltDb) GetRunners(projectID int, activeOnly bool) (runners []db.Runner, err error) {
 	return
 }
 

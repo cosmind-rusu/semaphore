@@ -1,17 +1,19 @@
+//go:build !pro
+
 package sql
 
 import (
 	"encoding/base64"
 	"github.com/Masterminds/squirrel"
-	"github.com/semaphoreui/semaphore/db"
 	"github.com/gorilla/securecookie"
+	"github.com/semaphoreui/semaphore/db"
 )
 
 func (d *SqlDb) GetRunner(projectID int, runnerID int) (runner db.Runner, err error) {
 	return
 }
 
-func (d *SqlDb) GetRunners(projectID int) (runners []db.Runner, err error) {
+func (d *SqlDb) GetRunners(projectID int, activeOnly bool) (runners []db.Runner, err error) {
 	return
 }
 

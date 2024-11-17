@@ -9,7 +9,7 @@ import (
 
 func GetRunners(w http.ResponseWriter, r *http.Request) {
 	project := context.Get(r, "project").(db.Project)
-	runners, err := helpers.Store(r).GetRunners(project.ID)
+	runners, err := helpers.Store(r).GetRunners(project.ID, false)
 
 	if err != nil {
 		panic(err)
