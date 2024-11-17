@@ -133,6 +133,14 @@
       </v-btn>
     </v-toolbar>
 
+    <v-btn
+      v-else
+      style="position: absolute; right: 15px; top: 15px;"
+      color="primary"
+      @click="editItem('new')"
+    >{{ $t('newRunner') }}
+    </v-btn>
+
     <v-alert
       v-if="!premiumFeatures.project_runners"
       type="info"
