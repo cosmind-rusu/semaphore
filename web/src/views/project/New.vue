@@ -3,7 +3,7 @@
     <v-toolbar flat >
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
       <v-toolbar-title>
-        {{ projectType === 'premium' ? 'New Premium Subscription' : $t('newProject') }}
+        {{ projectType === 'premium' ? 'New Subscription' : $t('newProject') }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>

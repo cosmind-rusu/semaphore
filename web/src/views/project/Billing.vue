@@ -169,28 +169,11 @@
       </v-toolbar-title>
     </v-toolbar>
 
-    <v-tabs show-arrows class="pl-4">
-      <v-tab
-        v-if="projectType === 'premium'"
-        key="install"
-        :to="`/project/${projectId}/install`"
-      >News Feed
-      </v-tab>
-
-      <v-tab
-        v-if="projectType === ''"
-        key="history"
-        :to="`/project/${projectId}/history`"
-      >{{ $t('history') }}
-      </v-tab>
-      <v-tab key="activity" :to="`/project/${projectId}/activity`">{{ $t('activity') }}</v-tab>
-      <v-tab key="settings" :to="`/project/${projectId}/settings`">{{ $t('settings') }}</v-tab>
-      <v-tab
-        key="billing"
-        :to="`/project/${projectId}/billing`"
-      >Billing
-      </v-tab>
-    </v-tabs>
+    <DashboardMenu
+      :project-id="projectId"
+      :project-type="projectType"
+      :can-update-project="true"
+    />
 
     <v-container v-if="project != null" class="ml-0 px-6">
       <div class="mt-7 mb-6">
@@ -488,6 +471,7 @@ import { loadScript } from '@paypal/paypal-js';
 import { getErrorMessage } from '@/lib/error';
 import YesNoDialog from '@/components/YesNoDialog.vue';
 import SubscriptionLabel from '@/components/SubscriptionLabel.vue';
+import DashboardMenu from '@/components/DashboardMenu.vue';
 
 const PLANS = {
   free: {
@@ -534,7 +518,7 @@ const PLANS = {
 const FREE_TRIAL_PLANS = ['home', 'premium'];
 
 export default {
-  components: { YesNoDialog, SubscriptionLabel },
+  components: { YesNoDialog, SubscriptionLabel, DashboardMenu },
   props: {
     projectId: Number,
     projectType: String,

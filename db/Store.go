@@ -4,10 +4,11 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
-	log "github.com/sirupsen/logrus"
 	"reflect"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 const databaseTimeFormat = "2006-01-02T15:04:05:99Z"
@@ -408,6 +409,12 @@ var ViewProps = ObjectProps{
 	Type:                 reflect.TypeOf(View{}),
 	PrimaryColumnName:    "id",
 	DefaultSortingColumn: "position",
+}
+
+var RunnerProps = ObjectProps{
+	TableName:         "runner",
+	Type:              reflect.TypeOf(Runner{}),
+	PrimaryColumnName: "id",
 }
 
 var GlobalRunnerProps = ObjectProps{

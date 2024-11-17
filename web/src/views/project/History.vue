@@ -108,12 +108,6 @@ export default {
     DashboardMenu, TaskStatus, TaskLink, SubscriptionLabel,
   },
 
-  computed: {
-    isCloud() {
-      return process.env.VUE_APP_BUILD_TYPE === 'cloud';
-    },
-  },
-
   watch: {
     async projectId() {
       await this.loadItems();
