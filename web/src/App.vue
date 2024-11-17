@@ -497,7 +497,9 @@
             class="ActivatePremiumSubscriptionButton"
           >
             <v-list-item-content>
-              <v-list-item-title style="font-weight: bold; color: white; font-size: 18px;">
+              <v-list-item-title
+              style="font-weight: bold; color: white; font-size: 18px; text-align: center;"
+              >
                 Activate
                 <v-icon
                   color="white"
