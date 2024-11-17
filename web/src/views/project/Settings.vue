@@ -134,12 +134,6 @@ export default {
     };
   },
 
-  computed: {
-    isCloud() {
-      return process.env.VUE_APP_BUILD_TYPE === 'cloud';
-    },
-  },
-
   methods: {
     showDrawer() {
       EventBus.$emit('i-show-drawer');

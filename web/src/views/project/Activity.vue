@@ -36,12 +36,6 @@ export default {
 
   mixins: [ItemListPageBase],
 
-  computed: {
-    isCloud() {
-      return process.env.VUE_APP_BUILD_TYPE === 'cloud';
-    },
-  },
-
   methods: {
     getHeaders() {
       return [
