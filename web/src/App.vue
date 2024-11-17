@@ -310,17 +310,17 @@
           </v-list-item-content>
         </v-list-item>
 
-<!--        <v-list-item key="new_premium_license" :to="`/project/premium`">-->
-<!--          <v-list-item-icon>-->
-<!--            <v-icon color="#FFCA28">mdi-license</v-icon>-->
-<!--          </v-list-item-icon>-->
+       <v-list-item key="new_premium_license" :to="`/project/premium`">
+         <v-list-item-icon>
+           <v-icon color="#f14668" style="transform: scale(1.4);">mdi-professional-hexagon</v-icon>
+         </v-list-item-icon>
 
-<!--          <v-list-item-content>-->
-<!--            <v-list-item-title>-->
-<!--              New Premium Subscription-->
-<!--            </v-list-item-title>-->
-<!--          </v-list-item-content>-->
-<!--        </v-list-item>-->
+         <v-list-item-content>
+           <v-list-item-title>
+             New Subscription
+           </v-list-item-title>
+         </v-list-item-content>
+      </v-list-item>
 
       </v-list>
 
@@ -356,7 +356,7 @@
 
         <v-list-item
           v-if="isCloud && project.type === 'premium'"
-          key="support"
+          key="install"
           :to="`/project/${projectId}/install`"
         >
           <v-list-item-icon>

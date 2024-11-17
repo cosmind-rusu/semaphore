@@ -1,5 +1,12 @@
 <template>
   <v-tabs show-arrows class="pl-4">
+
+    <v-tab
+      v-if="isCloud && projectType === 'premium'"
+      key="news"
+      :to="`/project/${projectId}/news`"
+    >News</v-tab>
+
     <v-tab
       v-if="projectType === ''"
       key="history"
@@ -25,11 +32,12 @@
       <!-- <v-chip small class="ml-1" color="purple" style="color: white">Pro</v-chip> -->
       <v-icon class="ml-1" large color="hsl(348deg, 86%, 61%)">mdi-professional-hexagon</v-icon>
     </v-tab>
+
     <v-tab
-        v-if="isCloud && canUpdateProject"
-        key="billing"
-        :to="`/project/${projectId}/billing`"
-      >Billing</v-tab>
+      v-if="isCloud && canUpdateProject"
+      key="billing"
+      :to="`/project/${projectId}/billing`"
+    >Billing</v-tab>
   </v-tabs>
 </template>
 <script>
