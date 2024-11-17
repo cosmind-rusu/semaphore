@@ -189,7 +189,7 @@
       </v-tab>
     </v-tabs>
 
-    <v-container v-if="project != null">
+    <v-container v-if="project != null" class="ml-0 px-6">
       <div class="mt-7 mb-6">
         <div class="text-h3">
           <v-icon

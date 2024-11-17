@@ -205,7 +205,8 @@
 
                 <v-icon
                   v-if="project.type === 'premium'"
-                  color="#FFCA28"
+                  color="#f14668"
+                  style="transform: scale(1.3)"
                 >mdi-professional-hexagon</v-icon>
 
                 <v-avatar

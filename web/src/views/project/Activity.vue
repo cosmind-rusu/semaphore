@@ -2,7 +2,30 @@
   <div v-if="items">
     <v-toolbar flat>
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
-      <v-toolbar-title>{{ $t('dashboard') }}</v-toolbar-title>
+      <v-toolbar-title>
+        {{ $t('dashboard') }}
+
+        <span
+          style="
+            background: #f14668;
+            color: white;
+            margin-left: 20px;
+            padding: 2px 8px 2px 6px;
+            border-radius: 6px;
+            font-size: 16px;
+            transform: translateY(-2px);
+            display: inline-block;
+            "
+        >
+          <v-icon
+            v-if="projectType === 'premium'"
+            color="white"
+            style="transform: scale(1.1) translateY(-1px)"
+          >
+            mdi-professional-hexagon
+          </v-icon> Subscription
+        </span>
+      </v-toolbar-title>
     </v-toolbar>
 
     <v-tabs show-arrows class="pl-4">
