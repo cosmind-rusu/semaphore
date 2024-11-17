@@ -60,7 +60,16 @@ func (d *BoltDb) UpdateRunner(runner db.Runner) (err error) {
 func (d *BoltDb) CreateRunner(runner db.Runner) (newRunner db.Runner, err error) {
 	runner.Token = base64.StdEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
 
-	res, err := d.createObject(0, db.GlobalRunnerProps, runner)
+	bucketID := 0
+	props := db.GlobalRunnerProps
+
+	if runner.ProjectID != nil {
+		bucketID = *runner.ProjectID
+		props = db.RunnerProps
+	}
+
+	res, err := d.createObject(bucketID, props, runner)
+
 	if err != nil {
 		return
 	}
