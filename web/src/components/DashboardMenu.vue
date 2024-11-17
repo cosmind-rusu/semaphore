@@ -6,14 +6,21 @@
       :to="`/project/${projectId}/history`"
     >{{ $t('history') }}
     </v-tab>
+
     <v-tab key="activity" :to="`/project/${projectId}/activity`">{{ $t('activity') }}</v-tab>
+
     <v-tab
       v-if="canUpdateProject"
       key="settings"
       :to="`/project/${projectId}/settings`"
     >{{ $t('settings') }}
     </v-tab>
-    <v-tab key="runners" :to="`/project/${projectId}/runners`">
+
+    <v-tab
+      v-if="projectType === ''"
+      key="runners"
+      :to="`/project/${projectId}/runners`"
+    >
       {{ $t('runners') }}
       <!-- <v-chip small class="ml-1" color="purple" style="color: white">Pro</v-chip> -->
       <v-icon class="ml-1" large color="hsl(348deg, 86%, 61%)">mdi-professional-hexagon</v-icon>
