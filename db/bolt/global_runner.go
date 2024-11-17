@@ -54,7 +54,11 @@ func (d *BoltDb) DeleteGlobalRunner(runnerID int) (err error) {
 }
 
 func (d *BoltDb) UpdateRunner(runner db.Runner) (err error) {
-	return d.updateObject(0, db.GlobalRunnerProps, runner)
+	if runner.ProjectID == nil {
+		return d.updateObject(0, db.GlobalRunnerProps, runner)
+	} else {
+		return d.updateObject(*runner.ProjectID, db.RunnerProps, runner)
+	}
 }
 
 func (d *BoltDb) CreateRunner(runner db.Runner) (newRunner db.Runner, err error) {
