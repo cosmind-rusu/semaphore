@@ -16,6 +16,7 @@
             }
         }, 
         {
+            "buildFlags": ["-tags", "pro"],
             "name": "Launch Server with remote Runner",
             "type": "go",
             "request": "launch",
@@ -29,6 +30,7 @@
             }
         }, 
         {
+            "buildFlags": ["-tags", "pro"],
             "name": "Launch Runner",
             "type": "go",
             "request": "launch",

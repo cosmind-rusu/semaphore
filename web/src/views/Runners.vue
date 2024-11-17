@@ -1,7 +1,7 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div v-if="items != null">
 
-    <v-toolbar flat >
+    <v-toolbar flat v-if="projectId">
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
       <v-toolbar-title>
         {{ $t('dashboard2') }}
@@ -9,6 +9,7 @@
     </v-toolbar>
 
     <DashboardMenu
+      v-if="projectId"
       :project-id="projectId"
       project-type=""
       :can-update-project="can(USER_PERMISSIONS.updateProject)"
@@ -273,9 +274,10 @@ semaphore runner --no-config`;
     },
 
     async setActive(runnerId, active) {
+      const url = this.projectId ? `/api/project/${this.projectId}/runners/${runnerId}/active` : `/api/runners/${runnerId}/active`;
       await axios({
         method: 'post',
-        url: `/api/runners/${runnerId}/active`,
+        url,
         responseType: 'json',
         data: {
           active,

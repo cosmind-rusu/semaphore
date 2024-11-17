@@ -46,10 +46,15 @@ import ItemFormBase from '@/components/ItemFormBase';
 export default {
   props: {
     isAdmin: Boolean,
+    projectId: Number,
   },
   mixins: [ItemFormBase],
   methods: {
     getItemsUrl() {
+      if (this.projectId) {
+        return `/api/project/${this.projectId}/runners`;
+      }
+
       return '/api/runners';
     },
 
@@ -60,6 +65,9 @@ export default {
     },
 
     getSingleItemUrl() {
+      if (this.projectId) {
+        return `/api/project/${this.projectId}/runners/${this.itemId}`;
+      }
       return `/api/runners/${this.itemId}`;
     },
   },
