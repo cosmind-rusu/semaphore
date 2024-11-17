@@ -2,7 +2,7 @@
   <div style="height: 100%;">
     <v-toolbar flat>
       <v-app-bar-nav-icon style="color: white;" @click="showDrawer()"></v-app-bar-nav-icon>
-      <v-toolbar-title>Service Desk</v-toolbar-title>
+      <v-toolbar-title>Support Center</v-toolbar-title>
     </v-toolbar>
 
     <iframe

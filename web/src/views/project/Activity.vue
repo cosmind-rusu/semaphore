@@ -2,7 +2,10 @@
   <div v-if="items">
     <v-toolbar flat>
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
-      <v-toolbar-title>{{ $t('dashboard') }}</v-toolbar-title>
+      <v-toolbar-title>
+        {{ $t('dashboard') }}
+        <SubscriptionLabel v-if="projectType === 'premium'" />
+      </v-toolbar-title>
     </v-toolbar>
 
     <DashboardMenu
@@ -26,9 +29,10 @@
 <script>
 import ItemListPageBase from '@/components/ItemListPageBase';
 import DashboardMenu from '@/components/DashboardMenu.vue';
+import SubscriptionLabel from '@/components/SubscriptionLabel.vue';
 
 export default {
-  components: { DashboardMenu },
+  components: { SubscriptionLabel, DashboardMenu },
 
   mixins: [ItemListPageBase],
 

@@ -120,7 +120,7 @@
 
         <v-card-text class="text-xs-center pt-3" style="max-height: 1000px;">
           <p class="mb-2">
-            1. Download and install <b>Semaphore Premium</b>.
+            1. Download and install <b>Semaphore Pro</b>.
           </p>
           <v-btn
             color="primary"
@@ -130,7 +130,7 @@
 
           <p class="mb-2">
             2. Log in as an administrator to the Semaphore UI and click the yellow
-            button labeled <b>Activate Premium Subscription</b>.
+            button labeled <b>Activate Pro Subscription</b>.
           </p>
           <v-img class="rounded mb-6" :aspect-ratio="489/351"
                  src="activation_guide/screen1.webp?v=2"></v-img>
@@ -163,7 +163,10 @@
 
     <v-toolbar flat>
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
-      <v-toolbar-title>{{ $t('dashboard') }}</v-toolbar-title>
+      <v-toolbar-title>
+        {{ $t('dashboard') }}
+        <SubscriptionLabel v-if="projectType === 'premium'" />
+      </v-toolbar-title>
     </v-toolbar>
 
     <v-tabs show-arrows class="pl-4">
@@ -171,7 +174,7 @@
         v-if="projectType === 'premium'"
         key="install"
         :to="`/project/${projectId}/install`"
-      >Download
+      >News Feed
       </v-tab>
 
       <v-tab
@@ -189,7 +192,7 @@
       </v-tab>
     </v-tabs>
 
-    <v-container v-if="project != null">
+    <v-container v-if="project != null" class="ml-0 px-6">
       <div class="mt-7 mb-6">
         <div class="text-h3">
           <v-icon
@@ -233,7 +236,7 @@
           <v-timeline-item
             v-if="projectType === 'premium'"
             fill-dot
-            icon="mdi-license"
+            icon="mdi-professional-hexagon"
             class="text-subtitle-1 align-center"
           >
             Subscription Key: <code>{{ project.licenseKey || '&mdash;' }}</code>
@@ -484,6 +487,7 @@ import axios from 'axios';
 import { loadScript } from '@paypal/paypal-js';
 import { getErrorMessage } from '@/lib/error';
 import YesNoDialog from '@/components/YesNoDialog.vue';
+import SubscriptionLabel from '@/components/SubscriptionLabel.vue';
 
 const PLANS = {
   free: {
@@ -509,6 +513,18 @@ const PLANS = {
     price: 40,
     users: 8,
   },
+  pro1: {
+    price: 5,
+    users: 1,
+  },
+  pro4: {
+    price: 15,
+    users: 4,
+  },
+  pro10: {
+    price: 30,
+    users: 10,
+  },
   enterprise: {
     price: 1000,
     users: 1000000,
@@ -518,7 +534,7 @@ const PLANS = {
 const FREE_TRIAL_PLANS = ['home', 'premium'];
 
 export default {
-  components: { YesNoDialog },
+  components: { YesNoDialog, SubscriptionLabel },
   props: {
     projectId: Number,
     projectType: String,
@@ -536,7 +552,7 @@ export default {
       /**
        * @array
        */
-      premiumPlans: ['premium', 'premium_plus'].map((plan) => ({
+      premiumPlans: ['pro1', 'pro4', 'pro10'].map((plan) => ({
         ...PLANS[plan],
         id: plan,
       })),
@@ -712,11 +728,9 @@ export default {
     },
 
     async refreshProject() {
-      this.project = (await axios({
-        method: 'get',
-        url: `/billing/projects/${this.projectId}`,
-        responseType: 'json',
-      })).data;
+      this.project = {
+        plan: 'free',
+      };
 
       this.plan = PLANS[this.project.plan];
     },

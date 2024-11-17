@@ -19,6 +19,7 @@ import Team from '../views/project/Team.vue';
 import Users from '../views/Users.vue';
 import Auth from '../views/Auth.vue';
 import New from '../views/project/New.vue';
+import News from '../views/project/News.vue';
 import Integrations from '../views/project/Integrations.vue';
 import IntegrationExtractor from '../views/project/IntegrationExtractor.vue';
 import Apps from '../views/Apps.vue';
@@ -68,6 +69,10 @@ const routes = [
   {
     path: '/project/:projectId/schedule',
     component: Schedule,
+  },
+  {
+    path: '/project/:projectId/news',
+    component: News,
   },
   {
     path: '/project/:projectId/settings',
