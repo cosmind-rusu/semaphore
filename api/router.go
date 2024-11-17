@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"embed"
 	"fmt"
-	"github.com/semaphoreui/semaphore/api/subscriptions"
 	"net/http"
 	"os"
 	"path"
 	"strings"
 	"time"
+
+	"github.com/semaphoreui/semaphore/api/subscriptions"
 
 	"github.com/semaphoreui/semaphore/api/runners"
 
@@ -491,7 +492,7 @@ func getSystemInfo(w http.ResponseWriter, r *http.Request) {
 		"use_remote_runner": util.Config.UseRemoteRunner,
 
 		"premium_features": map[string]bool{
-			"project_runners": false,
+			"project_runners": true,
 		},
 	}
 

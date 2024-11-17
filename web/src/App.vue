@@ -232,7 +232,7 @@
             </v-list-item>
           </v-list>
         </template>
-        <v-list>
+        <v-list class="pb-0">
           <v-list-item
             v-for="(item, i) in projects"
             :key="i"
@@ -282,20 +282,27 @@
             </v-list-item-content>
           </v-list-item>
 
-<!--          <v-divider v-if="user.can_create_project"/>-->
+          <!-- <v-divider v-if="user.can_create_project"/> -->
 
-<!--          <v-list-item-->
-<!--            @click="showNewProjectDialogue('premium')"-->
-<!--            v-if="user.can_create_project"-->
-<!--          >-->
-<!--            <v-list-item-icon>-->
-<!--              <v-icon color="#FFCA28">mdi-license</v-icon>-->
-<!--            </v-list-item-icon>-->
+          <v-list-item
+            @click="showNewProjectDialogue('premium')"
+            v-if="user.can_create_project"
+            style="background: #f14668"
+            class="NewProSubscriptionMenuItem"
+          >
+            <v-list-item-icon>
+              <v-icon
+                color="white"
+                style="transform: scale(1.4)"
+              >
+                mdi-professional-hexagon
+              </v-icon>
+            </v-list-item-icon>
 
-<!--            <v-list-item-content style="font-weight: bold; color: #FFCA28;">-->
-<!--              New Premium Subscription-->
-<!--            </v-list-item-content>-->
-<!--          </v-list-item>-->
+            <v-list-item-content style="font-weight: bold; color: white;">
+              New Subscription
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
       </v-menu>
 
@@ -500,12 +507,11 @@
               <v-list-item-title
               style="font-weight: bold; color: white; font-size: 18px; text-align: center;"
               >
-                Activate
                 <v-icon
                   color="white"
                   x-large
                 >mdi-professional-hexagon</v-icon>
-                Subscription
+                Activate Subscription
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -734,7 +740,23 @@
   <v-app v-else></v-app>
 </template>
 <style lang="scss">
+.NewProSubscriptionMenuItem {
+  transition: 0.2s transform;
+  .v-list-item__content, .v-list-item__icon {
+    transition: 0.5s transform;
+  }
+  &:hover {
 
+    transform: scale(1.05) translateY(-1px);
+
+    // .v-list-item__content {
+    //   transform: scale(1.05) translateX(2px);
+    // }
+    .v-list-item__icon {
+      // transform: rotate(-360deg);
+    }
+  }
+}
 .ActivatePremiumSubscriptionButton {
   background: hsl(348deg, 86%, 61%);
   transform: rotate(-5deg) scale(0.95);
