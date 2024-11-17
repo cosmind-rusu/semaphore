@@ -58,7 +58,7 @@ tasks:
       - >-
         env CGO_ENABLED=0 GOOS={{ .GOOS }} GOARCH={{ .GOARCH }}
         go build -o bin/semaphore{{ if eq OS "windows" }}.exe{{ end }}
-        -tags "netgo"
+        -tags "pro,netgo"
         -gcflags="all=-N -l"
         -ldflags "-X {{ .IMPORT }}/util.Ver={{ .VERSION }} -X {{ .IMPORT }}/util.Commit={{ .SHA }} -X {{ .IMPORT }}/util.Date={{ .DATE }}" ./cli
     vars:
@@ -96,7 +96,7 @@ tasks:
       - >-
         env CGO_ENABLED=0 GOOS={{ .GOOS }} GOARCH={{ .GOARCH }}
         go build -o bin/semaphore{{ if eq OS "windows" }}.exe{{ end }}
-        -tags "netgo"
+        -tags "pro,netgo"
         -ldflags "-s -w -X {{ .IMPORT }}/util.Ver={{ .VERSION }} -X {{ .IMPORT }}/util.Commit={{ .SHA }} -X {{ .IMPORT }}/util.Date={{ .DATE }}" ./cli
     vars:
       TAG:
