@@ -41,11 +41,8 @@
   </v-tabs>
 </template>
 <script>
-import PermissionsCheck from '@/components/PermissionsCheck';
 
 export default {
-
-  mixins: [PermissionsCheck],
 
   props: {
     projectId: Number,
