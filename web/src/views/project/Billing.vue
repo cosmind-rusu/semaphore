@@ -719,6 +719,13 @@ export default {
       })).data;
 
       this.plan = PLANS[this.project.plan];
+
+      if (this.plan && this.premiumPlans.some((plan) => plan.id === this.project.plan)) {
+        this.premiumPlans.push({
+          ...this.plan,
+          id: this.project.plan,
+        });
+      }
     },
 
     async selectPlan(plan) {
