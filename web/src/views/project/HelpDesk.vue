@@ -9,7 +9,7 @@
       ref="iframe"
       @load="onLoad"
       class="crisp_chat"
-      title="Support Desk"
+      title="Support Center"
       :src="`/helpdesk/projects/${projectId}/${pathMatch || 'dashboard'}`"/>
   </div>
 

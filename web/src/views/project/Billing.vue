@@ -515,7 +515,7 @@ const PLANS = {
   },
 };
 
-const FREE_TRIAL_PLANS = ['home', 'premium'];
+const FREE_TRIAL_PLANS = ['home', 'premium', 'pro1', 'pro4'];
 
 export default {
   components: { YesNoDialog, SubscriptionLabel, DashboardMenu },
@@ -720,7 +720,7 @@ export default {
 
       this.plan = PLANS[this.project.plan];
 
-      if (this.plan && !this.premiumPlans.some((plan) => plan.id === this.project.plan)) {
+      if (this.plan && this.plan !== 'free' && !this.premiumPlans.some((plan) => plan.id === this.project.plan)) {
         this.premiumPlans.push({
           ...this.plan,
           id: this.project.plan,
