@@ -144,31 +144,8 @@
 
     <v-toolbar flat>
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
-      <v-toolbar-title>{{ $t('dashboard') }}</v-toolbar-title>
+      <v-toolbar-title>Download and Install</v-toolbar-title>
     </v-toolbar>
-
-    <v-tabs show-arrows class="pl-4">
-      <v-tab
-        v-if="projectType === 'premium'"
-        key="install"
-        :to="`/project/${projectId}/install`"
-      >Download
-      </v-tab>
-
-      <v-tab
-        v-if="projectType === ''"
-        key="history"
-        :to="`/project/${projectId}/history`"
-      >{{ $t('history') }}
-      </v-tab>
-      <v-tab key="activity" :to="`/project/${projectId}/activity`">{{ $t('activity') }}</v-tab>
-      <v-tab key="settings" :to="`/project/${projectId}/settings`">{{ $t('settings') }}</v-tab>
-      <v-tab
-        key="billing"
-        :to="`/project/${projectId}/billing`"
-      >Billing
-      </v-tab>
-    </v-tabs>
 
     <div class="pa-4" v-if="project.plan === 'free'">
       <v-alert
