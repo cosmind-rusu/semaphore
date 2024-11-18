@@ -712,9 +712,11 @@ export default {
     },
 
     async refreshProject() {
-      this.project = {
-        plan: 'free',
-      };
+      this.project = (await axios({
+        method: 'get',
+        url: `/billing/projects/${this.projectId}`,
+        responseType: 'json',
+      })).data;
 
       this.plan = PLANS[this.project.plan];
     },
