@@ -103,16 +103,25 @@ func GetRunner(w http.ResponseWriter, r *http.Request) {
 
 func UpdateRunner(w http.ResponseWriter, r *http.Request) {
 	oldRunner := context.Get(r, "runner").(*db.Runner)
+	project := context.Get(r, "project").(db.Project)
 
 	var runner db.Runner
 	if !helpers.Bind(w, r, &runner) {
 		return
 	}
 
+	if *runner.ProjectID != project.ID {
+		log.Error(fmt.Sprintf("Project ID in body and URL must be the same: %v vs. %v", runner.ProjectID, project.ID))
+
+		helpers.WriteJSON(w, http.StatusBadRequest, map[string]string{
+			"error": "Project ID in body and URL must be the same",
+		})
+		return
+	}
+
 	store := helpers.Store(r)
 
 	runner.ID = oldRunner.ID
-	runner.ProjectID = nil
 
 	err := store.UpdateRunner(runner)
 
