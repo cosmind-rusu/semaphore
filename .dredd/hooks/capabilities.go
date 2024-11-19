@@ -62,6 +62,10 @@ func addCapabilities(caps []string) {
 }
 
 func resolveCapability(caps []string, resolved []string, uid string) {
+
+	_ = store.SetOption("subscription_key", "d4a17fa8-4fe9-45e9-b317-56e905f5e84d")
+	_ = store.SetOption("subscription_token", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJkNGExN2ZhOC00ZmU5LTQ1ZTktYjMxNy01NmU5MDVmNWU4NGQiLCJwbGFuIjoicHJvMTAiLCJzdGF0ZSI6ImFjdGl2ZSIsInVzZXJzIjoxMCwiZXhwaXJlc0F0IjoiMjAyNC0xMi0xOVQxNzoyMzoyNi4wMDBaIiwiaWF0IjoxNzMyMDM3MTE3LCJleHAiOjE3MzQ2MjkxMTd9.Thp4xnle22Sr0tKfbNGx6_kyfRsvQQd3LSP-BojG2xs4FH6ENx6n6b-vAfq5jKQhHyyt3cXGpRYR-r57fVPFKJtKGYTzzU2T-xP4R3PzYVSsOKuOF0bZwNGS06IAhAW-CCCOdfYDFFumoMS8tqCdFc5Ws8y2SOrSGpAha9Ok1sZufrQc6lczuTq-7RGeVPhXYuvc6nJYQC4U4DeD_lo5EP7xFmhKcLOMR6tFCr_6G6a3qvWf-AywC8MhPS5XsY190auXKutWolbim764sfq4b1FcjlAtDPy-3nlRbxXVMGdh5IFDgCU_XrI_CQvSHQzLdcNGJu4x5Kaj3lyrg26TOg")
+
 	for _, v := range caps {
 
 		//if cap has deps resolve them
@@ -157,6 +161,7 @@ func resolveCapability(caps []string, resolved []string, uid string) {
 		default:
 			panic("unknown capability " + v)
 		}
+
 		resolved = append(resolved, v)
 	}
 }

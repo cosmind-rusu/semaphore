@@ -56,7 +56,7 @@ func Activate(w http.ResponseWriter, r *http.Request) {
 
 	resp, err := http.Post(
 		fmt.Sprintf(
-			"https://cloud.semui.co/billing/subscriptions/%s/activate",
+			"https://cloud.semaphoreui.com/billing/subscriptions/%s/activate",
 			req.Key,
 		),
 		"application/json",

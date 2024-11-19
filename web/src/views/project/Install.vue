@@ -20,7 +20,7 @@
           <iframe
             title=""
             style="border: 0; display: block; padding: 0; margin: 0; width: 100%; height: 400px;"
-            :src="`https://www.semui.co/releases/semaphore-v${(detailsVersion.semver || '').replaceAll('.', '_')}-premium/fragment`"
+            :src="`https://www.semaphoreui.com/releases/semaphore-v${(detailsVersion.semver || '').replaceAll('.', '_')}-premium/fragment`"
           ></iframe>
         </v-card-text>
       </v-card>
@@ -49,26 +49,26 @@
           <div>Docs:</div>
           <div v-if="installationGuideAsset.platform === 'docker'">
             <a
-              href="https://docs.semui.co/administration-guide/installation#docker"
+              href="https://docs.semaphoreui.com/administration-guide/installation#docker"
               target="_blank"
             >Installation</a>
           </div>
           <div v-else-if="['deb', 'rpm'].includes(installationGuideAsset.extension)">
             <a
-              href="https://docs.semui.co/administration-guide/installation#package-manager"
+              href="https://docs.semaphoreui.com/administration-guide/installation#package-manager"
               target="_blank"
             >Installation</a>
           </div>
 
           <div v-else-if="['zip', 'tar.gz'].includes(installationGuideAsset.extension)">
             <a
-              href="https://docs.semui.co/administration-guide/installation#binary-file"
+              href="https://docs.semaphoreui.com/administration-guide/installation#binary-file"
               target="_blank"
               class="pr-4"
             >Installation</a>
 
             <a
-              href="https://docs.semui.co/administration-guide/configuration#configuration-file"
+              href="https://docs.semaphoreui.com/administration-guide/configuration#configuration-file"
               target="_blank"
             >Configuration</a>
           </div>
@@ -305,7 +305,7 @@ function getInstallationFileName(assets, version) {
 }
 
 function getInstallationFileURL(assets, version) {
-  return `https://www.semui.co/uploads/v${version.semver}-premium/${version.id}/${getInstallationFileName(assets, version)}`;
+  return `https://www.semaphoreui.com/uploads/v${version.semver}-premium/${version.id}/${getInstallationFileName(assets, version)}`;
 }
 
 const EXTENSION_ICONS = {
@@ -537,7 +537,7 @@ export default {
     },
 
     getAssetUrl(asset, version) {
-      return `https://www.semui.co/uploads/v${version.semver}-premium/${version.id}/semaphore_${version.semver}-premium_${asset.platform}_${asset.architecture}.${asset.extension}`;
+      return `https://www.semaphoreui.com/uploads/v${version.semver}-premium/${version.id}/semaphore_${version.semver}-premium_${asset.platform}_${asset.architecture}.${asset.extension}`;
     },
 
     showDrawer() {
