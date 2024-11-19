@@ -44,7 +44,7 @@ func RefreshToken(store db.Store) {
 
 	resp, err := http.Post(
 		fmt.Sprintf(
-			"https://cloud.semui.co/billing/subscriptions/%s/validate",
+			"https://cloud.semaphoreui.com/billing/subscriptions/%s/validate",
 			key,
 		),
 		"application/json",
