@@ -68,7 +68,7 @@ func addUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if count >= token.Users {
+	if count >= max(1, token.Users) {
 		helpers.WriteErrorStatus(w,
 			fmt.Sprintf("Your subscription allows you to have a maximum of %d users.", token.Users), http.StatusForbidden)
 		return
