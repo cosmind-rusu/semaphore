@@ -3,7 +3,7 @@ name: Premium
 'on':
   push:
     tags:
-      - v*-premium
+      - v*-pro
 
 jobs:
   release:
@@ -51,7 +51,7 @@ jobs:
         run: |
           GITHUB_TOKEN=${{ secrets.GH_TOKEN }} task release:prod
 
-  deploy-premium:
+  deploy-pro:
     runs-on: ubuntu-latest
 
     steps:
