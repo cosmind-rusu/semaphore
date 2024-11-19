@@ -6,13 +6,13 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-gorp/gorp/v3"
 	"github.com/semaphoreui/semaphore/db"
 	"github.com/semaphoreui/semaphore/db/bolt"
 	"github.com/semaphoreui/semaphore/db/factory"
 	"github.com/semaphoreui/semaphore/db/sql"
 	"github.com/semaphoreui/semaphore/pkg/random"
 	"github.com/semaphoreui/semaphore/util"
-	"github.com/go-gorp/gorp/v3"
 	"github.com/snikch/goodman/transaction"
 )
 
@@ -160,6 +160,9 @@ func addProject() *db.Project {
 	if err != nil {
 		panic(err)
 	}
+
+	_ = store.SetOption("subscription_key", "e2ffbbf9-37fd-4698-b666-d4fdbcb0e5ef")
+	_ = store.SetOption("subscription_token", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJlMmZmYmJmOS0zN2ZkLTQ2OTgtYjY2Ni1kNGZkYmNiMGU1ZWYiLCJwbGFuIjoicHJlbWl1bSIsInN0YXRlIjoiYWN0aXZlIiwidXNlcnMiOjQsImV4cGlyZXNBdCI6IjIwMjQtMDQtMTNUMjM6MzM6NTQuMDAwWiIsImlhdCI6MTcxNzMzNjQ1NywiZXhwIjoxNzE5OTI4NDU3fQ.Dzf_jwi3RHUBJqdSmyHohrczG4kkuFwCeuSKPuG8eGFvP5NC6hDk2f6FehrYQAz-6zkFWpOPSh_gRPo7IO4K1VQ35tomKSy_SU2awVkeQWRzbG76x-LS-98BdHXEujkRuZwZmyGOd5gWImTdyq1uRYLuLqdEak9q53CEUqFMwVbH1FGleG5yFwInqgThd0myCkQE-8UzM78_s2IfP32G1OF1cNmP56Opuh-gpQCJiR2VidRCN7ot2PSyzsDO0X03qLGha3-40ID_9EZFbpRFg8N10-0K1uJBV0fq00CRREs_pazyWvfCXkShb8H8aWeEMNxWWSU7DURNFjzRN8vlEA")
 
 	return &project
 }
