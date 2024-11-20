@@ -3,8 +3,7 @@
     <v-toolbar flat>
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
       <v-toolbar-title>
-        {{ $t('dashboard') }}
-        <SubscriptionLabel v-if="projectType === 'premium'" />
+        {{ projectType === 'premium' ? 'Manage Subscription' : $t('dashboard') }}
       </v-toolbar-title>
     </v-toolbar>
 
@@ -95,7 +94,6 @@ import socket from '@/socket';
 import { TEMPLATE_TYPE_ICONS } from '@/lib/constants';
 import AppsMixin from '@/components/AppsMixin';
 import DashboardMenu from '@/components/DashboardMenu.vue';
-import SubscriptionLabel from '@/components/SubscriptionLabel.vue';
 
 export default {
   mixins: [ItemListPageBase, AppsMixin],
@@ -105,7 +103,7 @@ export default {
   },
 
   components: {
-    DashboardMenu, TaskStatus, TaskLink, SubscriptionLabel,
+    DashboardMenu, TaskStatus, TaskLink,
   },
 
   watch: {

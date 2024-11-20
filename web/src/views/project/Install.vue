@@ -301,11 +301,21 @@ const PLATFORM_ICONS = {
 };
 
 function getInstallationFileName(assets, version) {
-  return `semaphore_${version.semver}-premium_${assets.platform}_${assets.architecture[0]}.${assets.extension}`;
+  switch (version.registry) {
+    case 'ecr':
+      return `semaphore_${version.semver}-premium_${assets.platform}_${assets.architecture[0]}.${assets.extension}`;
+    default:
+      return `semaphorepro_${version.semver}_${assets.platform}_${assets.architecture[0]}.${assets.extension}`;
+  }
 }
 
 function getInstallationFileURL(assets, version) {
-  return `https://www.semaphoreui.com/uploads/v${version.semver}-premium/${version.id}/${getInstallationFileName(assets, version)}`;
+  switch (version.registry) {
+    case 'ecr':
+      return `https://www.semaphoreui.com/uploads/v${version.semver}-pro/${version.id}/${getInstallationFileName(assets, version)}`;
+    default:
+      return `https://www.semaphoreui.com/uploads/v${version.semver}-premium/${version.id}/${getInstallationFileName(assets, version)}`;
+  }
 }
 
 const EXTENSION_ICONS = {
@@ -383,9 +393,10 @@ export default {
 
       versions: [{
         semver: '2.10.41',
-        id: '213755fc-63f5-4995-81e7-2ec99003bce9',
+        id: '52d93a69-4ddd-4d92-b6ec-b83785734e1f',
         date: 'Nov 20, 2024',
         description: 'Project Runners.',
+        registry: 'ecr',
         dockerAssets: {
           terraform: '1.8.2',
           tofu: '1.7.0',
@@ -493,6 +504,17 @@ export default {
         return '';
       }
 
+      let imagePath;
+
+      switch (this.installationGuideVersion.registry) {
+        case 'ecr':
+          imagePath = `public.ecr.aws/semaphore/pro/server:v${this.installationGuideVersion.semver}`;
+          break;
+        default:
+          imagePath = `semaphoreui/semaphore:v${this.installationGuideVersion.semver}-premium`;
+          break;
+      }
+
       if (this.installationGuideAsset.platform === 'docker') {
         return `docker run -p 3000:3000 --name semaphore \\
     -e SEMAPHORE_DB_DIALECT=bolt \\
@@ -500,7 +522,7 @@ export default {
     -e SEMAPHORE_ADMIN_PASSWORD=changeme \\
     -e SEMAPHORE_ADMIN_NAME=Admin \\
     -e SEMAPHORE_ADMIN_EMAIL=admin@localhost \\
-    -d semaphoreui/semaphore:v${this.installationGuideVersion.semver}-premium`;
+    -d ${imagePath}`;
       }
 
       if (!this.installationGuideAsset.extension) {

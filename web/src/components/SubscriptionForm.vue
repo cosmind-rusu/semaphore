@@ -7,7 +7,7 @@
   >
     <v-alert
       :value="formError"
-      :color="(formError || '').includes('already activated') ? 'warning' : 'error'"
+      :type="(formError || '').includes('already activated') ? 'warning' : 'error'"
     >{{ formError }}
     </v-alert>
 
@@ -47,7 +47,7 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-    <v-alert color="info" v-else>There is no active subscription.</v-alert>
+    <v-alert type="info" v-else>There is no active subscription.</v-alert>
 
   </v-form>
 </template>

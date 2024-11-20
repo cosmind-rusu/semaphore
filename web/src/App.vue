@@ -136,9 +136,16 @@
       :dont-close-on-save="true"
     >
       <template v-slot:title="{}">
-        <v-icon large class="mr-2" color="#f14668">mdi-professional-hexagon</v-icon>
-        Subscription
+        <v-icon
+          large
+          class="mr-2"
+          color="#f14668"
+        >
+          mdi-professional-hexagon
+        </v-icon>
+        Subscription Details
       </template>
+
       <template v-slot:form="{ onSave, onError, needSave, needReset }">
         <SubscriptionForm
           item-id="new"
@@ -351,11 +358,13 @@
             : `/project/${projectId}/history`"
         >
           <v-list-item-icon>
-            <v-icon>mdi-view-dashboard</v-icon>
+            <v-icon>{{ project.type === 'premium' ? 'mdi-license' : 'mdi-view-dashboard' }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>{{ $t('dashboard') }}</v-list-item-title>
+            <v-list-item-title>
+              {{ project.type === 'premium' ? 'Manage Subscription' : $t('dashboard') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -638,11 +647,16 @@
                 @click="subscriptionDialog = true"
               >
                 <v-list-item-icon>
-                  <v-icon color="#f14668">mdi-professional-hexagon</v-icon>
+                  <v-icon
+                    color="#f14668"
+                    style="transform: scale(1.4)"
+                  >
+                    mdi-professional-hexagon
+                  </v-icon>
                 </v-list-item-icon>
 
                 <v-list-item-content>
-                  Subscription
+                  Subscription Details
                 </v-list-item-content>
               </v-list-item>
 

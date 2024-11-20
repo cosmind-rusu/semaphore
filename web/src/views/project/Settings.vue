@@ -10,8 +10,7 @@
     <v-toolbar flat >
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
       <v-toolbar-title>
-        {{ $t('dashboard') }}
-        <SubscriptionLabel v-if="projectType === 'premium'" />
+        {{ projectType === 'premium' ? 'Manage Subscription' : $t('dashboard') }}
       </v-toolbar-title>
     </v-toolbar>
 
@@ -115,11 +114,10 @@ import YesNoDialog from '@/components/YesNoDialog.vue';
 import delay from '@/lib/delay';
 import PremiumLicenseProjectForm from '@/components/PremiumLicenseProjectForm.vue';
 import DashboardMenu from '@/components/DashboardMenu.vue';
-import SubscriptionLabel from '@/components/SubscriptionLabel.vue';
 
 export default {
   components: {
-    PremiumLicenseProjectForm, DashboardMenu, YesNoDialog, ProjectForm, SubscriptionLabel,
+    PremiumLicenseProjectForm, DashboardMenu, YesNoDialog, ProjectForm,
   },
 
   props: {
