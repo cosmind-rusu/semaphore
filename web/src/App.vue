@@ -250,6 +250,7 @@
               <v-icon
                 v-if="item.type === 'premium'"
                 color="#f14668"
+                style="transform: scale(1.3)"
               >mdi-professional-hexagon</v-icon>
 
               <v-avatar
