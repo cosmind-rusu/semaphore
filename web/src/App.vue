@@ -282,11 +282,9 @@
             </v-list-item-content>
           </v-list-item>
 
-          <!-- <v-divider v-if="user.can_create_project"/> -->
-
           <v-list-item
             @click="showNewProjectDialogue('premium')"
-            v-if="user.can_create_project"
+            v-if="isCloud"
             style="background: #f14668"
             class="NewProSubscriptionMenuItem"
           >
@@ -317,7 +315,7 @@
           </v-list-item-content>
         </v-list-item>
 
-       <v-list-item key="new_premium_license" :to="`/project/premium`">
+       <v-list-item v-if="isCloud" key="new_premium_license" :to="`/project/premium`">
          <v-list-item-icon>
            <v-icon color="#f14668" style="transform: scale(1.4);">mdi-professional-hexagon</v-icon>
          </v-list-item-icon>
