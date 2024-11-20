@@ -382,6 +382,19 @@ export default {
       detailsVersion: {},
 
       versions: [{
+        semver: '2.10.41',
+        id: '213755fc-63f5-4995-81e7-2ec99003bce9',
+        date: 'Nov 20, 2024',
+        description: 'Project Runners.',
+        dockerAssets: {
+          terraform: '1.8.2',
+          tofu: '1.7.0',
+          pulumi: '3.116.1',
+          bash: '5.2.21',
+          ansible: '2.16.7',
+          python: '3.11.9',
+        },
+      }, {
         semver: '2.9.107',
         id: '17b51e42-3e81-467b-835f-105ade00e0f4',
         date: 'May 24, 2024',
