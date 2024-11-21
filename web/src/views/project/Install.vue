@@ -395,6 +395,20 @@ export default {
       detailsVersion: {},
 
       versions: [{
+        semver: '2.10.42',
+        id: 'a6d9b5cc-2ae8-40f3-814c-0c5c11a09b25',
+        date: 'Nov 21, 2024',
+        description: 'Expandable Task Log and Inventory dialogs.',
+        registry: 'ecr',
+        dockerAssets: {
+          terraform: '1.8.2',
+          tofu: '1.7.0',
+          pulumi: '3.116.1',
+          bash: '5.2.21',
+          ansible: '2.16.7',
+          python: '3.11.9',
+        },
+      }, {
         semver: '2.10.41',
         id: '52d93a69-4ddd-4d92-b6ec-b83785734e1f',
         date: 'Nov 20, 2024',
