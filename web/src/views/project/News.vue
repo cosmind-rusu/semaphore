@@ -72,7 +72,7 @@ export default {
     return {
       USER_PERMISSIONS,
       posts: [{
-        image: 'https://opengraph.githubassets.com/144b5aed2d05ec90597b53a971560e5084a2bf58a3b79ad3c72e853e2fbc8bc7/semaphoreui/semaphore/releases/tag/v2.10.35',
+        image: 'https://semaphoreui.com/uploads/v2.10.41/poster.webp',
         title: 'Project Runners',
         subtitle: 'Allow to join remote runner to specified project.',
         text: "I'm a thing. But, like most politicians, he promised more than he could deliver. "

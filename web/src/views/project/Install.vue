@@ -274,7 +274,7 @@
 </style>
 <script>
 import EventBus from '@/event-bus';
-import axios from 'axios';
+// import axios from 'axios';
 import { APP_ICONS } from '@/lib/constants';
 
 const PLATFORM_ICONS = {
@@ -303,16 +303,16 @@ const PLATFORM_ICONS = {
 function getInstallationFileName(assets, version) {
   switch (version.registry) {
     case 'ecr':
-      return `semaphore_${version.semver}-premium_${assets.platform}_${assets.architecture[0]}.${assets.extension}`;
-    default:
       return `semaphorepro_${version.semver}_${assets.platform}_${assets.architecture[0]}.${assets.extension}`;
+    default:
+      return `semaphore_${version.semver}-premium_${assets.platform}_${assets.architecture[0]}.${assets.extension}`;
   }
 }
 
 function getInstallationFileURL(assets, version) {
   switch (version.registry) {
     case 'ecr':
-      return `https://www.semaphoreui.com/uploads/v${version.semver}-pro/${version.id}/${getInstallationFileName(assets, version)}`;
+      return `https://www.semaphoreui.com/uploads/v${version.semver}/${version.id}/${getInstallationFileName(assets, version)}`;
     default:
       return `https://www.semaphoreui.com/uploads/v${version.semver}-premium/${version.id}/${getInstallationFileName(assets, version)}`;
   }
@@ -574,7 +574,7 @@ export default {
     getAssetUrl(asset, version) {
       switch (version.registry) {
         case 'ecr':
-          return `https://www.semaphoreui.com/uploads/v${version.semver}-pro/${version.id}/semaphorepro_${version.semver}_${asset.platform}_${asset.architecture}.${asset.extension}`;
+          return `https://www.semaphoreui.com/uploads/v${version.semver}/${version.id}/semaphorepro_${version.semver}_${asset.platform}_${asset.architecture}.${asset.extension}`;
         default:
           return `https://www.semaphoreui.com/uploads/v${version.semver}-premium/${version.id}/semaphore_${version.semver}-premium_${asset.platform}_${asset.architecture}.${asset.extension}`;
       }
@@ -591,11 +591,11 @@ export default {
       });
     },
     async refreshProject() {
-      this.project = (await axios({
+      this.project = {}; /* (await axios({
         method: 'get',
         url: `/billing/projects/${this.projectId}`,
         responseType: 'json',
-      })).data;
+      })).data; */
     },
 
   },
