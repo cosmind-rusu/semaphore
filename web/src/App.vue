@@ -71,9 +71,10 @@
 
     <EditDialog
       v-model="taskLogDialog"
-      save-button-text="Delete"
       :max-width="1000"
       :hide-buttons="true"
+      :expandable="true"
+      name="TaskLogDialog"
       @close="onTaskLogDialogClosed()"
     >
       <template v-slot:title={}>
