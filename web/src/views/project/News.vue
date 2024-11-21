@@ -42,7 +42,7 @@
                 <v-divider></v-divider>
 
                 <v-card-text>
-                  {{ post.text }}
+                  <div v-html="post.text"></div>
                 </v-card-text>
               </div>
             </v-expand-transition>
@@ -74,11 +74,12 @@ export default {
       posts: [{
         image: 'https://semaphoreui.com/uploads/v2.10.41/poster.webp',
         title: 'Project Runners',
-        subtitle: 'Allow to join remote runner to specified project.',
-        text: "I'm a thing. But, like most politicians, he promised more than he could deliver. "
-          + "You won't have time for sleeping, soldier, not with all the bed making you'll be doing. "
-          + "Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! "
-          + "You're going to do his laundry? I've got to find a way to escape.",
+        subtitle: 'Allow joining a remote runner to a specified project.',
+        text: '<ol>'
+          + '<li>Project Runners allow dedicated resources to be allocated to specific projects, avoiding contention and improving performance.</li>'
+          + '<li>You can scale runners independently for each project based on workload, making it easier to manage high-demand projects without impacting others.</li>'
+          + '<li>Administrators can assign and monitor runners at the project level, providing better control over execution environments and resource utilization.</li>'
+          + '</ol>',
         show: false,
       }],
     };
