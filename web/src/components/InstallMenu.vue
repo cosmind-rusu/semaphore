@@ -3,7 +3,7 @@
 
     <v-tab
       key="artifacts"
-      :to="`/project/${projectId}`"
+      :to="`/project/${projectId}/install`"
     >
       Artifacts
     </v-tab>
@@ -16,20 +16,12 @@ export default {
 
   props: {
     projectId: Number,
-    projectType: String,
-    canUpdateProject: Boolean,
   },
 
   data() {
     return {
       id: null,
     };
-  },
-
-  computed: {
-    isCloud() {
-      return process.env.VUE_APP_BUILD_TYPE === 'cloud';
-    },
   },
 
 };

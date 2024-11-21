@@ -147,6 +147,8 @@
       <v-toolbar-title>Download and Install</v-toolbar-title>
     </v-toolbar>
 
+    <InstallMenu :project-id="projectId" />
+
     <div class="pa-4" v-if="project.plan === 'free'">
       <v-alert
         dense
@@ -276,6 +278,7 @@
 import EventBus from '@/event-bus';
 // import axios from 'axios';
 import { APP_ICONS } from '@/lib/constants';
+import InstallMenu from '@/components/InstallMenu.vue';
 
 const PLATFORM_ICONS = {
   windows: {
@@ -371,7 +374,7 @@ tar xf ${getInstallationFileName(assets, version)}
 };
 
 export default {
-  components: {},
+  components: { InstallMenu },
   props: {
     projectId: Number,
     projectType: String,
