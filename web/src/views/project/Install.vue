@@ -572,7 +572,12 @@ export default {
     },
 
     getAssetUrl(asset, version) {
-      return `https://www.semaphoreui.com/uploads/v${version.semver}-premium/${version.id}/semaphore_${version.semver}-premium_${asset.platform}_${asset.architecture}.${asset.extension}`;
+      switch (version.registry) {
+        case 'ecr':
+          return `https://www.semaphoreui.com/uploads/v${version.semver}-pro/${version.id}/semaphorepro_${version.semver}_${asset.platform}_${asset.architecture}.${asset.extension}`;
+        default:
+          return `https://www.semaphoreui.com/uploads/v${version.semver}-premium/${version.id}/semaphore_${version.semver}-premium_${asset.platform}_${asset.architecture}.${asset.extension}`;
+      }
     },
 
     showDrawer() {
