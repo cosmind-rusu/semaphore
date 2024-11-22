@@ -7,6 +7,7 @@ import (
 )
 
 func (d *SqlDb) GetRunner(projectID int, runnerID int) (runner db.Runner, err error) {
+	err = db.ErrNotFound
 	return
 }
 
@@ -16,5 +17,6 @@ func (d *SqlDb) GetRunners(projectID int, activeOnly bool) (runners []db.Runner,
 }
 
 func (d *SqlDb) DeleteRunner(projectID int, runnerID int) (err error) {
+	err = db.ErrNotFound
 	return
 }
