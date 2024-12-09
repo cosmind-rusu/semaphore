@@ -63,7 +63,7 @@ func ParseToken(tokenString string) (res Token, err error) {
 	}
 
 	// Parse and verify the token
-	token, err := jwt.Parse(tokenString, keyFunc)
+	token, err := jwt.Parse(tokenString, keyFunc, jwt.WithoutClaimsValidation())
 
 	isTokenExpired := false
 
