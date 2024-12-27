@@ -1,3 +1,4 @@
+// Package setup handles the interactive configuration of the Semaphore application
 package setup
 
 import (
@@ -7,48 +8,38 @@ import (
 	"strings"
 
 	log "github.com/sirupsen/logrus"
-
 	"github.com/semaphoreui/semaphore/util"
 )
 
+// interactiveSetupBlurb contains the welcome message and overview of the setup process
 const interactiveSetupBlurb = `
 Hello! You will now be guided through a setup to:
 
-1. Set up configuration for a MySQL/MariaDB database
-2. Set up a path for your playbooks (auto-created)
-3. Run database Migrations
-4. Set up initial semaphore user & password
-
+1. Set up configuration for a MySQL/MariaDB database. This step involves specifying the hostname, user, password, and database name for your MySQL instance.
+2. Set up a path for your playbooks. A default path will be suggested, or you can provide your own location.
+3. Run database migrations. This ensures that the database schema is up-to-date and ready for use.
+4. Set up an initial semaphore user and password. This user will have administrative access to the application.
 `
 
-func InteractiveRunnerSetup(conf *util.ConfigType) {
-
-	askValue("Semaphore server URL", "", &conf.WebHost)
-
-	conf.Runner = &util.RunnerConfig{}
-
-	askValue("Path to the file where runner token will be stored", "", &conf.Runner.TokenFile)
-
-	haveToken := false
-	askConfirmation("Do you have runner token?", false, &haveToken)
-
-	if haveToken {
-		token := ""
-		askValue("Runner token", "", &token)
-
-		// TODO: write token
-	}
-}
-
+// InteractiveSetup guides the user through the configuration process
+// It handles database selection, playbook path setup, alerts configuration, and LDAP setup
 func InteractiveSetup(conf *util.ConfigType) {
 	fmt.Print(interactiveSetupBlurb)
 
+	selectDatabase(conf)
+	setPlaybookPath(conf)
+	configureAlerts(conf)
+	configureLDAP(conf)
+}
+
+// selectDatabase prompts the user to choose between MySQL, BoltDB, or PostgreSQL
+// and configures the selected database settings
+func selectDatabase(conf *util.ConfigType) {
 	dbPrompt := `What database to use:
    1 - MySQL
    2 - BoltDB
    3 - PostgreSQL
 `
-
 	var db int
 	askValue(dbPrompt, "1", &db)
 
@@ -62,49 +53,68 @@ func InteractiveSetup(conf *util.ConfigType) {
 	case 3:
 		conf.Dialect = util.DbDriverPostgres
 		scanPostgres(conf)
+	default:
+		log.Warn("Invalid database selection. Defaulting to MySQL.")
+		conf.Dialect = util.DbDriverMySQL
+		scanMySQL(conf)
 	}
+}
 
+// setPlaybookPath configures the path where playbooks will be stored
+// Uses system temp directory as default base path
+func setPlaybookPath(conf *util.ConfigType) {
 	defaultPlaybookPath := filepath.Join(os.TempDir(), "semaphore")
 	askValue("Playbook path", defaultPlaybookPath, &conf.TmpPath)
 	conf.TmpPath = filepath.Clean(conf.TmpPath)
+}
 
-	askValue("Public URL (optional, example: https://example.com/semaphore)", "", &conf.WebHost)
-
-	askConfirmation("Enable email alerts?", false, &conf.EmailAlert)
-	if conf.EmailAlert {
-		askValue("Mail server host", "localhost", &conf.EmailHost)
-		askValue("Mail server port", "25", &conf.EmailPort)
-		askValue("Mail sender address", "semaphore@localhost", &conf.EmailSender)
+// configureAlerts sets up various alert integrations including email, Telegram,
+// Slack, Rocket.Chat, and Microsoft Teams
+func configureAlerts(conf *util.ConfigType) {
+	alertConfigurations := []struct {
+		name     string
+		enabled  *bool
+		settings func()
+	}{
+		{"email alerts", &conf.EmailAlert, func() {
+			askValue("Mail server host", "localhost", &conf.EmailHost)
+			askValue("Mail server port", "25", &conf.EmailPort)
+			askValue("Mail sender address", "semaphore@localhost", &conf.EmailSender)
+		}},
+		{"telegram alerts", &conf.TelegramAlert, func() {
+			askValue("Telegram bot token (from @BotFather)", "", &conf.TelegramToken)
+			askValue("Telegram chat ID", "", &conf.TelegramChat)
+		}},
+		{"slack alerts", &conf.SlackAlert, func() {
+			askValue("Slack Webhook URL", "", &conf.SlackUrl)
+		}},
+		{"Rocket.Chat alerts", &conf.RocketChatAlert, func() {
+			askValue("Rocket.Chat Webhook URL", "", &conf.RocketChatUrl)
+		}},
+		{"Microsoft Teams alerts", &conf.MicrosoftTeamsAlert, func() {
+			askValue("Microsoft Teams Webhook URL", "", &conf.MicrosoftTeamsUrl)
+		}},
 	}
 
-	askConfirmation("Enable telegram alerts?", false, &conf.TelegramAlert)
-	if conf.TelegramAlert {
-		askValue("Telegram bot token (you can get it from @BotFather)", "", &conf.TelegramToken)
-		askValue("Telegram chat ID", "", &conf.TelegramChat)
+	// Iterate through each alert type and configure if enabled
+	for _, alert := range alertConfigurations {
+		askConfirmation("Enable "+alert.name+"?", false, alert.enabled)
+		if *alert.enabled {
+			alert.settings()
+		}
 	}
+}
 
-	askConfirmation("Enable slack alerts?", false, &conf.SlackAlert)
-	if conf.SlackAlert {
-		askValue("Slack Webhook URL", "", &conf.SlackUrl)
-	}
-
-	askConfirmation("Enable Rocket.Chat alerts?", false, &conf.RocketChatAlert)
-	if conf.RocketChatAlert {
-		askValue("Rocket.Chat Webhook URL", "", &conf.RocketChatUrl)
-	}
-
-	askConfirmation("Enable Microsoft Team Channel alerts?", false, &conf.MicrosoftTeamsAlert)
-	if conf.MicrosoftTeamsAlert {
-		askValue("Microsoft Teams Webhook URL", "", &conf.MicrosoftTeamsUrl)
-	}
-
+// configureLDAP sets up LDAP authentication if enabled
+// Configures server details, bind credentials, and field mappings
+func configureLDAP(conf *util.ConfigType) {
 	askConfirmation("Enable LDAP authentication?", false, &conf.LdapEnable)
 	if conf.LdapEnable {
 		conf.LdapMappings = &util.LdapMappings{}
 		askValue("LDAP server host", "localhost:389", &conf.LdapServer)
 		askConfirmation("Enable LDAP TLS connection", false, &conf.LdapNeedTLS)
 		askValue("LDAP DN for bind", "cn=user,ou=users,dc=example", &conf.LdapBindDN)
-		askValue("Password for LDAP bind user", "pa55w0rd", &conf.LdapBindPassword)
+		askValue("Password for LDAP bind user", "", &conf.LdapBindPassword)
 		askValue("LDAP DN for user search", "ou=users,dc=example", &conf.LdapSearchDN)
 		askValue("LDAP search filter", `(uid=%s)`, &conf.LdapSearchFilter)
 		askValue("LDAP mapping for DN field", "dn", &conf.LdapMappings.DN)
@@ -114,16 +124,17 @@ func InteractiveSetup(conf *util.ConfigType) {
 	}
 }
 
+// scanBoltDb configures BoltDB settings
+// Uses the current working directory for the default database file location
 func scanBoltDb(conf *util.ConfigType) {
-	workingDirectory, err := os.Getwd()
-	if err != nil {
-		workingDirectory = os.TempDir()
-	}
+	workingDirectory := getWorkingDirectory()
 	defaultBoltDBPath := filepath.Join(workingDirectory, "database.boltdb")
 	conf.BoltDb = &util.DbConfig{}
 	askValue("db filename", defaultBoltDBPath, &conf.BoltDb.Hostname)
 }
 
+// scanMySQL configures MySQL connection settings
+// Sets up hostname, user, password, and database name
 func scanMySQL(conf *util.ConfigType) {
 	conf.MySQL = &util.DbConfig{}
 	askValue("db Hostname", "127.0.0.1:3306", &conf.MySQL.Hostname)
@@ -132,6 +143,8 @@ func scanMySQL(conf *util.ConfigType) {
 	askValue("db Name", "semaphore", &conf.MySQL.DbName)
 }
 
+// scanPostgres configures PostgreSQL connection settings
+// Sets up hostname, user, password, database name, and SSL mode
 func scanPostgres(conf *util.ConfigType) {
 	conf.Postgres = &util.DbConfig{}
 	askValue("db Hostname", "127.0.0.1:5432", &conf.Postgres.Hostname)
@@ -141,98 +154,42 @@ func scanPostgres(conf *util.ConfigType) {
 	if conf.Postgres.Options == nil {
 		conf.Postgres.Options = make(map[string]string)
 	}
-	if _, exists := conf.Postgres.Options["sslmode"]; !exists {
-		conf.Postgres.Options["sslmode"] = "disable"
-	}
+	conf.Postgres.Options["sslmode"] = "disable"
 }
 
-func scanErrorChecker(n int, err error) {
-	if err != nil && err.Error() != "unexpected newline" {
-		log.Warn("An input error occurred: " + err.Error())
-	}
-}
-
-type IConfig interface {
-	ToJSON() ([]byte, error)
-}
-
-func SaveConfig(config IConfig, defaultFilename string, requiredConfigPath string) (configPath string) {
-
-	if requiredConfigPath == "" {
-		configDirectory, err := os.Getwd()
-		if err != nil {
-			configDirectory, err = os.UserConfigDir()
-			if err != nil {
-				// Final fallback
-				configDirectory = "/etc/semaphore"
-			}
-			configDirectory = filepath.Join(configDirectory, "semaphore")
-		}
-
-		askValue("Config output directory", configDirectory, &configDirectory)
-		configPath = filepath.Join(configDirectory, defaultFilename)
-	} else {
-		configPath = requiredConfigPath
-	}
-
-	configDirectory := filepath.Dir(configPath)
-
-	fmt.Printf("Running: mkdir -p %v..\n", configDirectory)
-
-	var err error
-
-	if _, err = os.Stat(configDirectory); err != nil {
-		if os.IsNotExist(err) {
-			err = os.MkdirAll(configDirectory, 0755)
-		}
-	}
-
+// getWorkingDirectory returns the current working directory
+// Falls back to system temp directory if working directory cannot be determined
+func getWorkingDirectory() string {
+	workingDirectory, err := os.Getwd()
 	if err != nil {
-		log.Panic("Could not create config directory: " + err.Error())
+		return os.TempDir()
 	}
-
-	// Marshal config to json
-	bytes, err := config.ToJSON()
-	if err != nil {
-		panic(err)
-	}
-
-	if err = os.WriteFile(configPath, bytes, 0644); err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("Configuration written to %v..\n", configPath)
-	return
+	return workingDirectory
 }
 
-func askValue(prompt string, defaultValue string, item interface{}) {
-	// Print prompt with optional default value
+// askValue prompts the user for input with an optional default value
+// The provided item pointer is updated with the user's input
+func askValue(prompt, defaultValue string, item interface{}) {
 	fmt.Print(prompt)
-	if len(defaultValue) != 0 {
-		fmt.Print(" (default " + defaultValue + ")")
+	if defaultValue != "" {
+		fmt.Printf(" (default %s)", defaultValue)
 	}
 	fmt.Print(": ")
-
 	_, _ = fmt.Sscanln(defaultValue, item)
-
 	scanErrorChecker(fmt.Scanln(item))
-
-	// Empty line after prompt
 	fmt.Println("")
 }
 
+// askConfirmation prompts the user for a yes/no response
+// Updates the provided boolean pointer based on the user's input
 func askConfirmation(prompt string, defaultValue bool, item *bool) {
 	defString := "yes"
 	if !defaultValue {
 		defString = "no"
 	}
-
-	fmt.Print(prompt + " (yes/no) (default " + defString + "): ")
-
+	fmt.Printf("%s (yes/no) (default %s): ", prompt, defString)
 	var answer string
-
 	scanErrorChecker(fmt.Scanln(&answer))
-
 	switch strings.ToLower(answer) {
 	case "y", "yes":
 		*item = true
@@ -241,7 +198,13 @@ func askConfirmation(prompt string, defaultValue bool, item *bool) {
 	default:
 		*item = defaultValue
 	}
-
-	// Empty line after prompt
 	fmt.Println("")
+}
+
+// scanErrorChecker handles errors that occur during user input scanning
+// Ignores expected newline errors but logs other scanning errors
+func scanErrorChecker(err error) {
+	if err != nil && err.Error() != "unexpected newline" {
+		log.Warn("An input error occurred: " + err.Error())
+	}
 }
